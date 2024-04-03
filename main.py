@@ -4,7 +4,7 @@ import pygame, math
 def page_accueil():
     running = True
     while running:
-        clock.tick(60)
+        clock.tick(FPS)
         # Tracé des éléments de la page
         screen.fill(BLANC)
         dessin_text1 = police.render("Space : Lunch the game", 1, NOIR)
@@ -73,7 +73,7 @@ def Game():
         # limits FPS to 60
         # dt is delta time in seconds since last frame, used for framerate-
         # independent physics.
-        dt = clock.tick(60) / 1000
+        dt = clock.tick(FPS) / 1000
         pygame.display.update()
         
     pygame.quit()
@@ -83,6 +83,7 @@ def Game():
 # ===== Pygame Setup =====
 pygame.init()
 
+FPS = 60
 width = 1280
 height = 720
 screen = pygame.display.set_mode((width, height))
