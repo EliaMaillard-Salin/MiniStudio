@@ -11,32 +11,17 @@ class Player:
     def __init__(self, speed, posX, posY,screen):
         self.jumpCount = 10
         self.isJumping = False
-        self.onGround = True
+        self.onGround = False
         self.speed = speed
         self.posX = posX
         self.posY = posY
         self.screen = screen
-        self.powerJump = 100
+        self.powerJump = 10
         self.Rect = pygame.Rect(self.posX,self.posY,100,100)
     
     def UpdatePlayer(self):
         self.Rect = pygame.Rect(self.posX,self.posY,100,100)
         pygame.draw.rect(self.screen, "white", self.Rect)
-    
-    def MovingPlayer(self,side, dt): 
-        self.posX += side* self.speed*dt
-        self.UpdatePlayer()
-
-    def Jump(self, dt):
-        
-        if player.onGround == True and self.isJumping == True: 
-            self.onGround = False
-            if self.jumpCount >= -10:
-                self.posY -= (self.jumpCount**2)*0.5
-                self.jumpCount -=1
-            else :
-                self.jumpCount = 10
-                self.isJumping = False
 
     def Fall(self, dt): 
         if self.onGround == False:
@@ -50,18 +35,22 @@ class Player:
             self.Rect.top <= Rect.top + Rect.height):
             return True
         return False
+
+
     
 
-screen = pygame.display.set_mode((900,900))
+screen = pygame.display.set_mode((500,500))
 
 running = True
 
-player = Player(400,400,700,screen)
+player = Player(400,400,200,screen)
 
-ground  = pygame.Rect(0,800,900,100)
+ground  = pygame.Rect(0,400,500,100)
 
+yGravity = 1
 
 while running: 
+
     dt = clock.tick(60) * 0.001
 
 
@@ -75,23 +64,29 @@ while running:
     if player.onGround == False:
         player.Fall(dt)
         player.onGround = player.Collision(ground)
+    if (player.posY + player.Rect.height) >= ground.top: 
+        player.Rect.bottom = ground.top
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-        if event.type == pygame.KEYDOWN: 
-            if event.key == pygame.K_SPACE and player.onGround == True:
-                player.isJumping = True
-                player.Jump(dt)
-
-
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_d]: 
-            player.MovingPlayer(1,dt)
-        if pressed[pygame.K_q]: 
-            player.MovingPlayer(-1,dt)
 
+        if pressed[pygame.K_d]: 
+            player.posX += player.speed * dt
+        if pressed[pygame.K_q]: 
+            player.posX += -player.speed * dt
+        if pressed[pygame.K_SPACE]:
+            player.isJumping = True
+
+    if player.isJumping: 
+        if player.jumpCount >= -10:
+            player.posY -= (player.jumpCount * abs(player.jumpCount)) * 0.5
+            player.jumpCount -= 1
+        else: 
+            player.jumpCount = 10
+            player.isJumping = False
     pygame.display.flip()
 
 
