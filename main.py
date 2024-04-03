@@ -6,12 +6,15 @@ def page_accueil():
     while running:
         clock.tick(FPS)
         # Tracé des éléments de la page
-        screen.fill(BLANC)
-        dessin_text1 = police.render("Space : Lunch the game", 1, NOIR)
-        screen.blit(dessin_text1, (100,100))
-        dessin_text_quitter = police.render("Echap : Quitter", 1, NOIR)
-        screen.blit(dessin_text_quitter, (100, 280))
+        screen.fill(VERT)
+        screen.blit(menu_background, (0,0))
+        
+        play_button = pygame.image.load("Assets/play_button.png")
+        play_button = pygame.transform.scale(play_button, (screen.get_width() / 2, screen.get_height() / 2))
+        screen.blit(play_button, (screen.get_width() / 2, screen.get_height() / 2))
         pygame.display.flip()
+        
+        
         # Navigation dans les pages
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -22,6 +25,7 @@ def page_accueil():
                 if event.key == pygame.K_SPACE:
                     running = False
                     Game()
+
     pygame.quit()
 
 
@@ -90,9 +94,14 @@ screen = pygame.display.set_mode((width, height))
 icon = pygame.image.load("maison.png")
 pygame.display.set_icon(icon)
 pygame.display.set_caption("Coders Legacy")
+
 # Loading the images
+menu_background = pygame.image.load("Assets/background.jpg")
+menu_background = pygame.transform.scale(menu_background, (width, height))
+
 bg = pygame.image.load("Assets/background2.png")
 bg = pygame.transform.scale(bg, (width, height))
+
 
 
 clock = pygame.time.Clock()
