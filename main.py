@@ -10,7 +10,7 @@ def page_accueil():
         screen.blit(menu_background, (0,0))
         
         play_button = pygame.image.load("Assets/play_button.png")
-        play_button = pygame.transform.scale(play_button, (screen.get_width() / 2, screen.get_height() / 2))
+        play_button = pygame.transform.scale(play_button, (screen.get_width() / 4, screen.get_height() / 4))
         screen.blit(play_button, (screen.get_width() / 2, screen.get_height() / 2))
         pygame.display.flip()
         
