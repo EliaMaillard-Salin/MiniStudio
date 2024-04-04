@@ -5,6 +5,8 @@ def page_accueil():
     running = True
     while running:
         clock.tick(FPS)
+        pygame.display.set_caption("Coders Legacy | FPS: %.2f" % clock.get_fps())
+        
         # Tracé des éléments de la page
         screen.fill(VERT)
         screen.blit(menu_background, (0,0))
@@ -37,6 +39,7 @@ def Game():
     i = 0
     running = True
     while running:
+        pygame.display.set_caption("Coders Legacy | FPS: %.2f" % clock.get_fps())
         # fill the screen with a color to wipe away anything from last frame
         screen.fill("purple")
         
@@ -62,14 +65,16 @@ def Game():
         if player_pos.x <= 0 or player_pos.y <= 0 or player_pos.x >= screen.get_width() or player_pos.y >= screen.get_height():
             player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
         
-        #player_pos.y += 200 * dt
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_z]: #Up
-            player_pos.y -= 500 * dt
+            player_pos.y -= 400 * dt
+        if keys[pygame.K_s]: #Up
+            player_pos.y += 400 * dt
         if keys[pygame.K_q]: #Left
-            player_pos.x -= 500 * dt
+            player_pos.x -= 400 * dt
         if keys[pygame.K_d]: #Right
-            player_pos.x += 500 * dt
+            player_pos.x += 400 * dt
 
         # flip() the display to put your work on screen
         pygame.display.flip()
@@ -91,9 +96,9 @@ FPS = 60
 width = 1280
 height = 720
 screen = pygame.display.set_mode((width, height))
-icon = pygame.image.load("maison.png")
+icon = pygame.image.load("Assets/maison.png")
 pygame.display.set_icon(icon)
-pygame.display.set_caption("Coders Legacy")
+
 
 # Loading the images
 menu_background = pygame.image.load("Assets/background.jpg")
