@@ -10,6 +10,7 @@ clock = pygame.time.Clock()
 class Player: 
     def __init__(self, speed, posX, posY,screen):
         self.jumpCount = 10
+        self.side = 1
         self.isJumping = False
         self.onGround = False
         self.speed = speed
@@ -18,15 +19,11 @@ class Player:
         self.screen = screen
         self.powerJump = 10
         self.Rect = pygame.Rect(self.posX,self.posY,100,100)
+        self.weapon = pygame.Rect( (self.posX + ( self.Rectwidth)*self.side), self.posY+(self.Rect.height/2) )
     
     def UpdatePlayer(self):
         self.Rect = pygame.Rect(self.posX,self.posY,100,100)
         pygame.draw.rect(self.screen, "white", self.Rect)
-
-    def Fall(self, dt): 
-        if self.onGround == False:
-            self.posY += 100 * dt
-            self.UpdatePlayer()
 
     def Collision(self, Rect):  
         if (self.Rect.left + self.Rect.width >= Rect.left and
