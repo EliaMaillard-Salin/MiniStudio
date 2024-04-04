@@ -22,7 +22,9 @@ class Sprite(pygame.sprite.Sprite):
 
 
 class Player(Sprite):
-    def __init__(self, startx, starty):
+    def __init__(self, pos, group):
+        startx = pos[0]
+        starty = pos[1]
         super().__init__("Assets/p1_front.png", startx, starty)
         self.stand_image = self.image
         self.jump_image = pygame.image.load("Assets/p1_jump.png")
@@ -110,9 +112,10 @@ class Player(Sprite):
 
 
 class Box(Sprite):
-    def __init__(self, startx, starty):
+    def __init__(self, pos, group):
+        startx = pos[0]
+        starty = pos[1]
         super().__init__("Assets/boxAlt.png", startx, starty)
-
 
 def main():
     pygame.init()
@@ -121,14 +124,15 @@ def main():
     
     pygame.display.set_icon(pygame.image.load("Assets/maison.png"))
     
-    player = Player(100, 200)
+    camera_group = pygame.sprite.Group()
+    player = Player((100, 200), camera_group)
 
     boxes = pygame.sprite.Group()
     for bx in range(0, 400, 70):
-        boxes.add(Box(bx, 300))
+        boxes.add(Box((bx, 300), camera_group))
 
-    boxes.add(Box(330, 230))
-    boxes.add(Box(100, 70))
+    boxes.add(Box((330, 230), camera_group))
+    boxes.add(Box((100, 70), camera_group))
 
     while True:
         pygame.event.pump()
