@@ -12,6 +12,7 @@ class Plateform:
         self.isImg = isImg
         self.plateformImage = pygame.image.load("img/Fichier_7.png").convert_alpha()
         self.plateformImage = pygame.transform.scale(self.plateformImage, (width,screen_height - height))
+
         self.solid = solidity
         self.Rect = pygame.Rect(posX,posY,width,height)
         self.color = color
@@ -36,13 +37,11 @@ class Plateform:
         return False
 
 
-    def CheckCollision(self, Rect, max): 
+    def CheckCollision(self, Rect): 
         if self.PlateformCollision(Rect) :
                 return True
         return False
     
-
-
 
 
 
@@ -63,16 +62,16 @@ allPlateforms=[]
 
 
 
-P1 = Plateform(300, 475, 200, 20, "green",False,True)
+P1 = Plateform(300, 475, 200, 20, "green",True)
 P1.CreatePlateform(allPlateforms)
 
-P2 = Plateform(0, 305, 200, 20, "green",False,True)
+P2 = Plateform(0, 305, 200, 20, "green",True)
 P2.CreatePlateform(allPlateforms)
 
-P3 = Plateform(500, 400, 200, 20, "green",False,True)
+P3 = Plateform(500, 400, 200, 20, "green",True)
 P3.CreatePlateform(allPlateforms)
 
-P4 = Plateform(200, 330, 200, 20, "green",True,False)
+P4 = Plateform(200, 330, 200, 20, "green",False)
 P4.CreatePlateform(allPlateforms)
 
 
@@ -99,10 +98,7 @@ while running:
         if(i.CheckCollision(player.playerRect)):
             player.PlayerOnGround(i.Rect.top) 
 
-    if player.posY > screen_height + player.height: 
-        player.posX = 300
-        player.posY = 400
-        player.onGround = True
+  
 
     # Affichage
     screen.fill("black")
@@ -111,9 +107,20 @@ while running:
         i.Display(screen)
 
     player.UpdatePlayer(screen)
-
-
+    
     pygame.display.update()
 
 
-pygame.quit()
+pygame.quit() 
+
+
+
+
+
+
+
+
+if player.posY > screen_height + player.height: 
+        player.posX = 300
+        player.posY = 400
+        player.onGround = True
