@@ -21,7 +21,7 @@ class Plateform:
     def CreatePlateform(self,plateformeList):
         plateformeList.append(self)
     def Display(self,surface): 
-        pygame.draw.rect(surface,self.color,self.Rect)
+        screen.blit(Tower, (0,0))
         pygame.draw.rect(surface,"red",self.Ground)
     def Collision(self, Rect):  
         if (self.Ground.left + self.Ground.width >= Rect.left and
@@ -42,8 +42,9 @@ green = (0, 255, 0)  # Couleur des plateformes
 player_x = 50
 player_y = 50
 player_width = 50
-player_height = 50
-player_velocity = 5
+player_height = 50 #
+
+player_velocity = 5 #
 dash_velocity = 20
 is_jumping = False
 is_dashing = False
@@ -155,6 +156,7 @@ while running:
     pygame.draw.rect(screen, "red" , (player_x, player_y, player_width, player_height))
 
     screen.blit(Barrer,(0,0))
+    
     pygame.display.update()
 
 pygame.quit()
