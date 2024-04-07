@@ -10,7 +10,7 @@ class Plateform:
         self.posX = posX
         self.posY = posY
         self.isImg = isImg
-        self.plateformImage = pygame.image.load("img/Fichier_7.png").convert_alpha()
+        self.plateformImage = pygame.image.load("Elia/img/Fichier_7.png").convert_alpha()
         self.plateformImage = pygame.transform.scale(self.plateformImage, (width,screen_height - height))
 
         self.solid = solidity
@@ -62,16 +62,16 @@ allPlateforms=[]
 
 
 
-P1 = Plateform(300, 475, 200, 20, "green",True)
+P1 = Plateform(300, 475, 200, 20, "green",True, "img/Sol simple.png")
 P1.CreatePlateform(allPlateforms)
 
-P2 = Plateform(0, 305, 200, 20, "green",True)
+P2 = Plateform(0, 305, 200, 20, "green",True, "img/Sol simple.png")
 P2.CreatePlateform(allPlateforms)
 
-P3 = Plateform(500, 400, 200, 20, "green",True)
+P3 = Plateform(500, 400, 200, 20, "green",True, "img/Sol simple.png")
 P3.CreatePlateform(allPlateforms)
 
-P4 = Plateform(200, 330, 200, 20, "green",False)
+P4 = Plateform(200, 330, 200, 20, "green",False, "img/Sol simple.png")
 P4.CreatePlateform(allPlateforms)
 
 
