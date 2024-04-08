@@ -2,12 +2,8 @@
 import pygame
 
 class Plateform: 
-<<<<<<< Updated upstream:MS Elia/Plateform.py
-    def __init__(self,posX,posY,width,height,color): 
-=======
     def __init__(self,posX,posY,width,height,color,solidity): 
         self.solidity = solidity
->>>>>>> Stashed changes:Elia/Plateform.py
         self.posX = posX
         self.posY = posY        
         self.Rect = pygame.Rect(posX,posY,width,height)
@@ -28,18 +24,11 @@ class Plateform:
             self.Ground.top <= Rect.top + Rect.height): #Collision avec le sol  
             return True
         return False
-<<<<<<< Updated upstream:MS Elia/Plateform.py
-
-
-    def CheckCollision(self, Rect): 
-        if self.PlateformCollision(Rect) :
-                return True
-=======
     
 
     def SetMaxValue(self, objectRect, maxvalue : list[int]): 
 
-        if (self.Rect.left + self.Rect.width >=objectRect.left) and  (self.Rect.left <=objectRect.left +objectRect.width ):
+        if (self.Rect.left + self.Rect.width > objectRect.left) and  (self.Rect.left < objectRect.left + objectRect.width ):
             if (self.Rect.bottom <= objectRect.top): 
                 maxvalue[0] = self.Rect.bottom
             else : 
@@ -50,7 +39,7 @@ class Plateform:
                 maxvalue[1] = -1
         else : 
             maxvalue[0] = -1 ; maxvalue[1] = -1
-        if ( self.Rect.top + self.Rect.height >=objectRect.top) and (self.Rect.top <= objectRect.top +objectRect.height):
+        if ( self.Rect.top + self.Rect.height > objectRect.top) and (self.Rect.top <  objectRect.top +objectRect.height):
             if(self.Rect.right<= objectRect.left):
                 maxvalue[2] = self.Rect.right   
             else : 
@@ -71,6 +60,5 @@ class Plateform:
                 return True
             return False
         
->>>>>>> Stashed changes:Elia/Plateform.py
         return False
     

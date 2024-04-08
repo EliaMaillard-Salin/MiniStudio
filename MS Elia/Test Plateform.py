@@ -25,13 +25,13 @@ allPlateforms=[]
 
 
 
-P1 = Plateform.Plateform(300, 475, 200, 20, "green",False)
+P1 = Plateform.Plateform(300, 475, 400, 20, "green",False)
 P1.CreatePlateform(allPlateforms)
 
 P2 = Plateform.Plateform(0, 305, 200, 20, "green",False)
 P2.CreatePlateform(allPlateforms)
 
-P3 = Plateform.Plateform(500, 400, 200, 20, "green",False)
+P3 = Plateform.Plateform(600, 400, 200, 20, "green",False)
 P3.CreatePlateform(allPlateforms)
 
 P4 = Plateform.Plateform(200, 330, 200, 20, "green",False)
@@ -74,7 +74,7 @@ while running:
     player.CheckWalls()
     
 
-    if player.posY +player.height >= screen_height :
+    if player.posY + player.height >= screen_height :
         player.posX = 300
         player.posY = 200
 
