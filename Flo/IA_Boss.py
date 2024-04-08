@@ -1,6 +1,7 @@
 import pygame as py
 from random import *
 import PlayerMovement
+import Plateform
 
 class Boss:
     def __init__(self, x,y,c,w,h):
@@ -11,6 +12,15 @@ class Boss:
         self.width = w
         self.height = h
         self.status_parry = False
+
+        #Movement
+        self.velocity = 1
+        self.jumpForce = 10
+        self.gravity = 0.5
+        self.verticalVelocity = 0
+        self.maxPosY = 0
+        self.x_goal = self.x_goal = randint(30,int(self.x))
+
         #Weapon 
         self.x_weapon = self.x + (self.width/2)
         self.y_weapon = self.y + (self.height/2)
@@ -18,56 +28,89 @@ class Boss:
         self.w_weapon = 50
         self.base_w_weapon = self.w_weapon
         self.h_weapon = 20
-        self.attackRect = py.Rect(self.x_weapon,self.y_weapon,self.w_weapon,self.h_weapon)
+
         #Shield
         self.w_shield = 10
         self.h_shield = h + 10
+
         #Aoe
-        self.w_shockwave = 30
+        self.w_shockwave = 40
         self.h_shockwave = 20
         self.shockwave_y = base_ground-self.h_shockwave
         self.shockwave_l_x = self.x-self.w_shockwave
         self.shockwave_r_x = self.x+self.width
-        self.AoeRect_l = py.Rect(self.shockwave_l_x,self.shockwave_y,self.w_shockwave,self.h_shockwave)
-        self.AoeRect_r = py.Rect(self.shockwave_r_x,self.shockwave_y,self.w_shockwave,self.h_shockwave)
+
         #Condition
         self.time_attack = 0
         self.movement = True
         self.status_aoe = False
         self.status_attack = False
         self.status_damage = True
+        self.isJumping = False
+        self.onGround = False
+
+    def choose_goal(self):
+        if randint(1,2) == 1 :
+                self.x_goal = randint(30,int(self.x))
+        else:
+            self.x_goal = randint(int(self.x)+self.width,w_screen)
 
     def move(self):
-        if self.x > player.posX+player.width :
-            self.x -= 0.5
-        elif self.x + self.width < player.posX :
-            self.x += 0.5
+        if self.x > self.x_goal :
+            self.x -= self.velocity
+        elif self.x + self.width < self.x_goal:
+            self.x += self.velocity
+        else :
+            self.choose_goal()
         self.x_weapon = self.x + (self.width/2)
+        if self.isJumping :
+            self.verticalVelocity += self.gravity
+            self.y += self.verticalVelocity
+        if (self.y <= self.maxPosY): 
+            self.y = self.maxPosY
+            
         self.shockwave_l_x = self.x-self.w_shockwave
         self.shockwave_r_x = self.x+self.width
+        self.y_weapon = self.y + (self.height/2)
     
-    def collide_attack(self,weapon,object):
-        if (weapon.right >= object.left and 
-            weapon.left <= object.right and
-            weapon.top <= object.bottom  and 
-            weapon.bottom >= object.top):  
+    def jump(self):
+        if not self.isJumping:
+                self.isJumping = True
+                self.verticalVelocity = -self.jumpForce
+
+    def collide_attack(self,object):
+        if (self.x_weapon+ self.w_weapon <= object.left and 
+            self.x_weapon <= object.right and
+            self.y_weapon <= object.bottom  and 
+            self.y_weapon + self.h_weapon >= object.top):  
             return True
         return False
-           
+    
+    def collide_aoe(self,object):
+        if (self.shockwave_l_x+ self.w_shockwave <= object.left and 
+            self.shockwave_l_x <= object.right and
+            self.shockwave_y <= object.bottom  and 
+            self.shockwave_y + self.h_shockwave >= object.top) or (self.shockwave_r_x+ self.w_shockwave <= object.left and 
+            self.shockwave_r_x <= object.right and
+            self.shockwave_y <= object.bottom  and 
+            self.shockwave_y + self.h_shockwave >= object.top):  
+            return True
+        return False
+
     def attack(self) :
         self.status_attack = True
         self.movement = False
         r = (self.range_weapon-(self.w_weapon//2))+1
         if self.x > player.posX :
             if self.w_weapon < r :
-                self.w_weapon+=15
+                self.w_weapon+=8
             else :
                 self.w_weapon = self.base_w_weapon
                 self.movement = True
                 self.status_attack = False
         else :
             if self.w_weapon < r :
-                self.w_weapon+=15
+                self.w_weapon+=8
             else :
                 self.w_weapon = self.base_w_weapon
                 self.movement = True
@@ -94,21 +137,13 @@ class Boss:
             py.draw.rect(fen, self.color, (self.x,self.y,self.width,self.height))
             py.display.flip()
             self.status_parry = False
-    
-     
 
-class Player:
-    def __init__(self, x,y,c,w,h,hp):
-        self.x = x
-        self.y = y
-        self.color = c
-        self.width = w
-        self.height = h
-        self.hp = hp
-    
-    def move(self, m):
-        self.x += m*5
- 
+    def BossOnGround(self, Y): 
+        if (self.verticalVelocity > 0 ):
+            self.y = Y - self.height
+            self.verticalVelocity = 0
+            self.isJumping = False  
+            self.onGround = True
 
 
 w_screen = 800
@@ -121,12 +156,19 @@ h_athena = 100
 athena = Boss(4*(h_screen/5),base_ground-h_athena,(255,255,255),w_athena,h_athena)#x,y,color,w,h
 clock = py.time.Clock()
 end_game = 0
-
+list_plateform = []
+ground = Plateform.Plateform(0,base_ground,w_screen,h_screen/10,(255,0,255))
+ground.CreatePlateform(list_plateform)
 continuer = True
 
 def update_screen ():
     fen.fill((150,150,150))
-    py.draw.rect(fen,(255,0,255),(0,base_ground,w_screen,h_screen/10))
+    for i in list_plateform :
+        if (i.CheckCollision(player.playerRect)):
+            player.PlayerOnGround(i.Rect.top)
+            athena.BossOnGround(i.Rect.top)
+    for i in list_plateform :
+        i.Display(fen)
     if player.hp > 0 :
         player.UpdatePlayer(fen)
     if athena.status_parry == False :
@@ -171,28 +213,33 @@ def pattern_boss():
 while continuer and end_game < 1500 :
     start_t = py.time.get_ticks()
     update_screen()
-    #if athena.movement :
-    #    athena.move()
+    if athena.movement :
+        athena.move()
     if player.hp > 0:
         player.Movement()
-    if (athena.time_attack >= 500 and player.hp > 0) or (athena.time_attack >= 400 and athena.status_parry) or (athena.status_aoe and athena.time_attack >= 10) or (athena.status_attack) :
+    if (athena.time_attack >= 300 and player.hp > 0) or (athena.time_attack >= 400 and athena.status_parry) or (athena.status_aoe and athena.time_attack >= 10) or (athena.status_attack) :
         pattern_boss()
         athena.time_attack = 0
         if athena.status_aoe :
-            if (athena.collide_attack(athena.AoeRect_l,player.playerRect)) or (athena.collide_attack(athena.AoeRect_r,player.playerRect)) and player.hp > 0 and athena.status_damage:
+            if athena.collide_aoe(player.playerRect) and player.hp > 0 and athena.status_damage:
                         player.hp -= 1
                         athena.status_damage = False
         if athena.status_attack :
-            if athena.collide_attack(athena.attackRect,player.playerRect) and player.hp > 0 and athena.status_damage:
+            if athena.collide_attack(player.playerRect) and player.hp > 0 and athena.status_damage:
                         player.hp -= 1
                         athena.status_damage = False
     for event in py.event.get():
         if event.type == py.QUIT:
             continuer = False
+        elif event.type == py.KEYDOWN and event.key == py.K_SPACE :
+            if not player.isJumping:
+                player.isJumping = True
+                player.verticalVelocity = -player.jumpForce
+            if randint(1,3) == 1 :
+                athena.jump()
     
     athena.time_attack += py.time.get_ticks() - start_t
-    print(athena.time_attack)
 
     if player.hp == 0:
         end_game += py.time.get_ticks() - start_t
-    clock.tick(90)
+    clock.tick(200)
