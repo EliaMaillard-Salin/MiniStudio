@@ -84,3 +84,63 @@ while True:
 
     # Limit the frame rate
     clock.tick(30)
+
+
+
+
+
+
+
+
+"""#Mouvement
+ispressed = pygame.key.get_pressed()
+
+#Mouvement to right
+if ispressed[pygame.K_d] and pos_x < (cam.limit_right+s_width//4):
+    pos_x += velocity_x
+    if pos_x >= cam.pos_cam_x and cam.pos_cam_x < cam.limit_right: 
+        cam.camera_offset_x -= velocity_x
+        cam.pos_cam_x += velocity_x
+
+#Mouvement to left
+if ispressed[pygame.K_q] and pos_x > (cam.limit_left-s_width//2):
+    pos_x -= velocity_x
+    if pos_x <= cam.pos_cam_x and cam.pos_cam_x > cam.limit_left:
+        cam.camera_offset_x += velocity_x
+        cam.pos_cam_x -= velocity_x
+
+#Mouvement up and down ----> à adapter avec le joueur 
+if event.type == pygame.KEYDOWN:
+    if event.key == pygame.K_UP and cam.pos_cam_y > cam.limit_top:
+        cam.camera_offset_y += velocity_y
+        cam.pos_cam_y -= velocity_y
+    
+    if event.key == pygame.K_DOWN and cam.pos_cam_y < cam.limit_bottom:
+        cam.camera_offset_y -= velocity_y
+        cam.pos_cam_y += velocity_y
+        
+        
+        
+rect_1 = pygame.Rect(800, 400, 40, 100)
+rect_2 = pygame.Rect(400, 40, 35, 120)
+rect_3 = pygame.Rect(0, 700, 1600, 120)
+
+
+    screen.fill(gray)
+    rect_1_draw_pos = P1.move(cam.camera_offset_x, cam.camera_offset_y)
+    pygame.draw.rect(screen, red, rect_1_draw_pos)
+    rect_2_draw_pos = P2.move(cam.camera_offset_x, cam.camera_offset_y)
+    pygame.draw.rect(screen, blue, rect_2_draw_pos)
+
+    rect_3_draw_pos = P3.move(cam.camera_offset_x, cam.camera_offset_y)
+    pygame.draw.rect(screen, green, rect_3_draw_pos)
+
+
+        rect_1_draw_pos = rect_1.move(cam.camera_offset_x, cam.camera_offset_y)
+        pygame.draw.rect(screen, red, rect_1_draw_pos)
+        rect_2_draw_pos = rect_2.move(cam.camera_offset_x, cam.camera_offset_y)
+        pygame.draw.rect(screen, blue, rect_2_draw_pos)
+        rect_3_draw_pos = rect_3.move(cam.camera_offset_x, cam.camera_offset_y)
+        pygame.draw.rect(screen, green, rect_3_draw_pos)
+
+"""
