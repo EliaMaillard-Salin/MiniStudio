@@ -37,7 +37,7 @@ class Player:
         self.playerRect = pygame.Rect(self.posX,self.posY,self.width,self.height)
         self.weaponRect = pygame.Rect((self.posX + ( self.playerRect.width / 2) ) - self.playerDirection*100, self.posY+(self.playerRect.height/4), 100, 30 )
 
-    def UpdatePlayer(self, surface): 
+    def DisplayPlayer(self, surface): 
         self.playerRect = pygame.Rect(self.posX,self.posY,self.width,self.height)
         pygame.draw.rect(surface, "white", self.playerRect)
         if self.isAttacking == True : 
@@ -92,8 +92,7 @@ class Player:
 
         self.verticalVelocity += self.gravity
         self.posY += self.verticalVelocity
-        if (self.posY <= self.maxPosY): 
-            self.posY = self.maxPosY
+
 
         if not self.isDashing:
             self.dashCooldown -= 1  
