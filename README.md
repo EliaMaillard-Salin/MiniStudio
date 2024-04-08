@@ -12,3 +12,4 @@
  - Pour appeler des fichier python présent dans les autres dosseirs il suffit de faire (exemple PlayerMovement ) au début du code: 
 	import Player.PlayerMovement
  - Quand vous faites dans modification temporaire dans votre branche pensez à bien les faire dans le dossier à votre nom. et pas en dehors.
+ - Il faut aussi recréer vos branches (:
