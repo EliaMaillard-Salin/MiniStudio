@@ -1,4 +1,3 @@
-
 import pygame
 
 class Player:
@@ -57,6 +56,7 @@ class Player:
         if pygame.mouse.get_pressed()[0]: 
             self.Attack()
         keys = pygame.key.get_pressed()
+        
     # Gestion du dash
         if keys[pygame.K_LSHIFT] and not self.isDashing and self.dashCooldown <= 0:
             self.isDashing = True
