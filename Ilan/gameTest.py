@@ -1,4 +1,5 @@
-import pygame, numpy
+import pygame
+import numpy
 
 WIDTH = 900
 HEIGHT = 500
@@ -25,11 +26,11 @@ class Player(Sprite):
     def __init__(self, pos, group):
         startx = pos[0]
         starty = pos[1]
-        super().__init__("Assets/p1_front.png", startx, starty)
+        super().__init__("Ilan/Assets/p1_front.png", startx, starty)
         self.stand_image = self.image
-        self.jump_image = pygame.image.load("Assets/p1_jump.png")
+        self.jump_image = pygame.image.load("Ilan/Assets/p1_jump.png")
 
-        self.walk_cycle = [pygame.image.load(f"Assets/p1_walk{i:0>2}.png") for i in range(1,12)]
+        self.walk_cycle = [pygame.image.load(f"Ilan/Assets/p1_walk{i:0>2}.png") for i in range(1,12)]
         self.animation_index = 0
         self.facing_left = False
 
@@ -115,14 +116,14 @@ class Box(Sprite):
     def __init__(self, pos, group):
         startx = pos[0]
         starty = pos[1]
-        super().__init__("Assets/boxAlt.png", startx, starty)
+        super().__init__("Ilan/Assets/boxAlt.png", startx, starty)
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     clock = pygame.time.Clock()
     
-    pygame.display.set_icon(pygame.image.load("Assets/maison.png"))
+    pygame.display.set_icon(pygame.image.load("Ilan/Assets/maison.png"))
     
     camera_group = pygame.sprite.Group()
     player = Player((100, 200), camera_group)

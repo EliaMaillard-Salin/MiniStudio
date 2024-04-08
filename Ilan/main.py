@@ -1,4 +1,5 @@
-import pygame, math
+import pygame
+import math
 
 # ===== Lunch Page =====
 def page_accueil():
@@ -11,7 +12,7 @@ def page_accueil():
         screen.fill(VERT)
         screen.blit(menu_background, (0,0))
         
-        play_button = pygame.image.load("Assets/play_button.png")
+        play_button = pygame.image.load("Ilan/Assets/play_button.png")
         play_button = pygame.transform.scale(play_button, (screen.get_width() / 4, screen.get_height() / 4))
         screen.blit(play_button, (screen.get_width() / 2, screen.get_height() / 2))
         pygame.display.flip()
@@ -96,15 +97,15 @@ FPS = 60
 width = 1280
 height = 720
 screen = pygame.display.set_mode((width, height))
-icon = pygame.image.load("Assets/maison.png")
+icon = pygame.image.load("Ilan/Assets/maison.png")
 pygame.display.set_icon(icon)
 
 
 # Loading the images
-menu_background = pygame.image.load("Assets/background.jpg")
+menu_background = pygame.image.load("Ilan/Assets/background.jpg")
 menu_background = pygame.transform.scale(menu_background, (width, height))
 
-bg = pygame.image.load("Assets/background2.png")
+bg = pygame.image.load("Ilan/Assets/background2.png")
 bg = pygame.transform.scale(bg, (width, height))
 
 
@@ -117,6 +118,6 @@ NOIR = (0, 0, 0)
 ROUGE = (255, 0, 0)
 VERT = (0, 255, 0)
 BLEU = (0, 0, 255)
-police = pygame.font.Font("AcherusGrotesqueFont/horizon-type-acherusgrotesque-regular.otf", 75)
+police = pygame.font.Font("Ilan/AcherusGrotesqueFont/horizon-type-acherusgrotesque-regular.otf", 75)
 
 page_accueil()
