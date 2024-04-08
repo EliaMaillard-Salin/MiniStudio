@@ -8,6 +8,7 @@ class Player:
         self.posY = posY
         self.width = width 
         self.height = height
+        self.maxValues = [-1,-1,-1,-1]
 
         #Player info 
         self.playerVelocity = 5
@@ -17,7 +18,6 @@ class Player:
         self.playerDirection = 0
         self.onGround = False
         self.newGround = 0
-        self.maxPosY = 0
 
         # Action Bools 
         self.isDashing = False
@@ -81,20 +81,18 @@ class Player:
 
             # Déplacement horizontal
             if keys[pygame.K_q]:
-                self.posX -= self.playerVelocity
+                self.posX -= self.playerVelocity 
                 self.playerDirection = 1
             if keys[pygame.K_d]:
                 self.playerDirection = 0
-                self.posX += self.playerVelocity
+                self.posX += self.playerVelocity 
 
         # Appliquer la gravité
         
 
-        self.verticalVelocity += self.gravity
+        self.verticalVelocity += self.gravity 
         self.posY += self.verticalVelocity
-        if (self.posY <= self.maxPosY): 
-            self.posY = self.maxPosY
-
+        
         if not self.isDashing:
             self.dashCooldown -= 1  
     
@@ -104,6 +102,30 @@ class Player:
             self.verticalVelocity = 0
             self.isJumping = False  
             self.onGround = False 
+
+    def AttackCollision(self, objectRect):
+        if self.isAttacking == True : 
+            if (self.playerRect.left + self.playerRect.width >=objectRect.left and 
+            self.playerRect.left <=objectRect.left +objectRect.width and
+            self.playerRect.top + self.playerRect.height >=objectRect.top and 
+            self.playerRect.top <=objectRect.top +objectRect.height):
+                return True
+            return False
+        
+    def CheckWalls(self): 
+        # max value : [ max top, min bottom, min left, max right]
+        if (self.posY <= self.maxValues[0] ) and (self.maxValues[0] != -1): 
+            self.posY = self.maxValues[0]
+
+        if (self.posY + self.height >= self.maxValues[1] ) and (self.maxValues[1] != -1): 
+            self.posY = self.maxValues[1] - self.height
+
+        if (self.posX <= self.maxValues[2] ) and (self.maxValues[2] != -1): 
+            self.posX = self.maxValues[2]
+
+        if (self.posX + self.width >= self.maxValues[3] ) and (self.maxValues[3] != -1): 
+            self.posY = self.maxValues[3] - self.width
+
 
 
 
