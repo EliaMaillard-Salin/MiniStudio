@@ -70,10 +70,16 @@ while run:
     clock.tick(FPS)
 
     # Gestion du défilement
-    if scroll_left and scroll > 0:
+    scroll_speed = 5 if pygame.key.get_mods() & pygame.KMOD_SHIFT else 1  # Vitesse de défilement accélérée si Maj est enfoncée
+
+    if scroll_left:
         scroll -= 5 * scroll_speed
-    elif scroll_right and scroll < (MAX_COLS * TILE_SIZE) - SCREEN_WIDTH:
+        if scroll < 0:
+            scroll = 0
+    elif scroll_right:
         scroll += 5 * scroll_speed
+        if scroll > (MAX_COLS * TILE_SIZE) - SCREEN_WIDTH:
+            scroll = (MAX_COLS * TILE_SIZE) - SCREEN_WIDTH
 
     screen.fill(GREEN)
     draw_grid()
@@ -98,6 +104,7 @@ while run:
                 scroll_left = False
             if event.key == pygame.K_RIGHT:
                 scroll_right = False
+
 
     # Gestion de la sélection et du placement de tuiles
     if pygame.mouse.get_pressed()[0]:  # Bouton gauche

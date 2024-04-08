@@ -46,6 +46,11 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            # Autoriser le saut uniquement si le joueur n'est pas déjà en train de sauter
+            if not player.isJumping:
+                player.isJumping = True
+                player.verticalVelocity = -player.jumpForce
 
     screen.fill(BG_COLOR)  # Remplit l'écran avec la couleur de fond
 
