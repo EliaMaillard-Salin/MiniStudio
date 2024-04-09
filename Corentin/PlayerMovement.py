@@ -7,7 +7,6 @@ class Player:
         self.posY = posY
         self.width = width 
         self.height = height
-        self.maxValues = [-1,-1,-1,-1, [-1, -1],[-1, -1],[-1, -1],[-1, -1]]
 
         #Player info 
         self.playerVelocity = 5
@@ -36,8 +35,8 @@ class Player:
         self.playerRect = pygame.Rect(self.posX,self.posY,self.width,self.height)
         self.weaponRect = pygame.Rect((self.posX + ( self.playerRect.width / 2) ) - self.playerDirection*100, self.posY+(self.playerRect.height/4), 100, 30 )
 
-    def DisplayPlayer(self, surface): 
-        self.playerRect = pygame.Rect(self.posX,self.posY,self.width,self.height)
+    def DisplayPlayer(self, surface, cam): 
+        self.playerRect = pygame.Rect(self.posX+cam.camera_offset_x,self.posY+cam.camera_offset_y,self.width,self.height)
         pygame.draw.rect(surface, "white", self.playerRect)
         if self.isAttacking == True : 
             if pygame.time.get_ticks() - self.ticksAttack >= 0.5*1000 or self.attackDirection != self.playerDirection: 
@@ -111,40 +110,3 @@ class Player:
             self.playerRect.top <=objectRect.top +objectRect.height):
                 return True
             return False
-        
-    def CheckWalls(self): 
-        # max value : [ max top, min bottom, min left, max right, top left, top right, bottom left, bottom right]
-        if (self.posY <= self.maxValues[0] ) and (self.maxValues[0] != -1): 
-            self.posY = self.maxValues[0]
-
-        if (self.posY + self.height >= self.maxValues[1] ) and (self.maxValues[1] != -1): 
-            self.posY = self.maxValues[1] - self.height
-
-        if (self.posX <= self.maxValues[2] ) and (self.maxValues[2] != -1): 
-            self.posX = self.maxValues[2]
-
-        if (self.posX + self.width >= self.maxValues[3] ) and (self.maxValues[3] != -1): 
-            self.posY = self.maxValues[3] - self.width
-
-    #top left
-        if (self.posY <= self.maxValues[4] ) and (self.maxValues[4] != -1):
-            self.posY = self.maxValues[4] 
-
-    #top right
-        if (self.posY <= self.maxValues[5] ) and (self.posX + self.width >= self.maxValues[3] ) and (self.maxValues[5] != -1):
-            self.posY = self.maxValues[5] - self.width
-
-    #bottom left
-        if (self.posY + self.height >= self.maxValues[6] ) and (self.posX <= self.maxValues[2] ) and (self.maxValues[6] != -1):
-            self.posY = self.maxValues[6] - self.height
-
-    #bottom right
-        if (self.posY + self.height >= self.maxValues[7] ) and (self.maxValues[7] != -1):
-            self.posY = self.maxValues[7] - self.height - self.width
-
-
-
-
-
-        
-
