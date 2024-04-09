@@ -47,7 +47,8 @@ def isInTile(x, y):
 def load_level(level_path):
     with open(level_path, 'r') as file:
         return list(csv.reader(file))
-map = load_level("Ilan/Levels/level_1.csv")
+loading_level = load_level("Ilan/Levels/level_1.csv")
+map = [[int(x) for x in inner] for inner in loading_level]
 print(map)
 
 def draw_world(level: list[list[int]], drawGrid: bool = False): # Draw the level
@@ -86,7 +87,7 @@ while running:
                 board_string = "["
                 with open("Ilan/Levels/level_1.csv", "w") as file:
                     for row in level:
-                        file.write(",".join(map(int, row)) + "\n")
+                        file.write(",".join(map(str, row)) + "\n")
                     print("Level saved")
         
         # Handle mouse events
@@ -110,8 +111,8 @@ while running:
                 level[tile_y][tile_x] = -1
 
     # Draw the level
-    draw_world(level, True)
-    #draw_world(map, False)
+    #draw_world(level, True)
+    draw_world(map, False)
 
     # Draw the elements at the mouse position
     if isInTile(tile_x, tile_y):
