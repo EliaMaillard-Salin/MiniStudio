@@ -29,7 +29,7 @@ P2.CreatePlateform(allPlateforms)
 P3 = Platforms.Plateform(600, 400, 200, 20, "green",False)
 P3.CreatePlateform(allPlateforms)
 
-P4 = Platforms.Plateform(200, 330, 200, 20, "green",False)
+P4 = Platforms.Plateform(200, 330, 200, 20, "red",True)
 P4.CreatePlateform(allPlateforms)
 
 P5 = Platforms.Plateform(250, 380, 50, 20, "red",True)
@@ -38,6 +38,7 @@ P5.CreatePlateform(allPlateforms)
 
 P6 = Platforms.Plateform(600, 330, 200, 20, "red",True)
 P6.CreatePlateform(allPlateforms)
+
 
 
 
@@ -63,7 +64,7 @@ while running:
             player.PlayerOnGround(i.Rect.top) 
         if i.solidity: 
             if(i.CheckWalls(player)) :
-                player.PlayerOnGround(i.Rect.top)  
+                player.PlayerOnGround(i.Rect.top)
 
 
     if player.posY + player.height >= screen_height :
