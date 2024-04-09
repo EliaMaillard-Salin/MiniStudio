@@ -29,8 +29,9 @@ P2.CreatePlateform(allPlateforms)
 P3 = Platforms.Plateform(600, 400, 200, 20, "green",False)
 P3.CreatePlateform(allPlateforms)
 
-P4 = Platforms.Plateform(200, 330, 200, 20, "green",False)
+P4 = Platforms.Plateform(200, 330, 200, 20, "red",True)
 P4.CreatePlateform(allPlateforms)
+
 
 
 
@@ -51,10 +52,12 @@ while running:
 
      
     for i in allPlateforms: 
-        if(i.CheckCollision(player.playerRect, player.maxValues)):
+        if(i.CheckCollision(player.playerRect)):
             player.PlayerOnGround(i.Rect.top) 
+        if i.solidity: 
+            if(i.CheckWalls(player)) :
+                player.PlayerOnGround(i.Rect.top)
 
-    player.CheckWalls()
 
     if player.posY + player.height >= screen_height :
         player.posX = 300
@@ -67,7 +70,7 @@ while running:
     for i in allPlateforms:
         i.Display(screen)
 
-    player.UpdatePlayer(screen)
+    player.DisplayPlayer(screen)
     
     pygame.display.update()
 
