@@ -54,16 +54,16 @@ def draw_tile_panel():
     for i, color in enumerate(tile_colors):
         pygame.draw.rect(screen, color, (SCREEN_WIDTH + 50, i * 100 + 50, TILE_SIZE, TILE_SIZE))
 
-def save_level():
+"""def save_level():
     with open('level.json', 'w') as file:
         json.dump(world_data, file)
-    print("Level saved!")
+    print("Level saved!")"""
 
-def load_level():
+"""def load_level():
     global world_data
     with open('level.json', 'r') as file:
         world_data = json.load(file)
-    print("Level loaded!")
+    print("Level loaded!")"""
 
 run = True
 while run:
@@ -95,10 +95,10 @@ while run:
                 scroll_left = True
             if event.key == pygame.K_RIGHT:
                 scroll_right = True
-            if event.key == pygame.K_s:
+            """if event.key == pygame.K_s:
                 save_level()
             if event.key == pygame.K_l:
-                load_level()
+                load_level()"""
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 scroll_left = False
