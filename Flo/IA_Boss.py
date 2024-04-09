@@ -19,7 +19,7 @@ class Boss:
         self.gravity = 0.5
         self.verticalVelocity = 0
         self.maxPosY = 0
-        self.x_goal = self.x_goal = randint(30,int(self.x))
+        self.x_goal = self.x_goal = randint(0,int(self.x))
 
         #Weapon 
         self.x_weapon = self.x + (self.width/2)
@@ -71,6 +71,7 @@ class Boss:
             
         self.shockwave_l_x = self.x-self.w_shockwave
         self.shockwave_r_x = self.x+self.width
+        self.x_weapon = self.x + (self.width/2)
         self.y_weapon = self.y + (self.height/2)
     
     def jump(self):
@@ -79,7 +80,7 @@ class Boss:
                 self.verticalVelocity = -self.jumpForce
 
     def collide_attack(self,object):
-        if (self.x_weapon+ self.w_weapon <= object.left and 
+        if (self.x_weapon+ self.w_weapon >= object.left and 
             self.x_weapon <= object.right and
             self.y_weapon <= object.bottom  and 
             self.y_weapon + self.h_weapon >= object.top):  
@@ -144,7 +145,8 @@ class Boss:
             self.verticalVelocity = 0
             self.isJumping = False  
             self.onGround = True
-
+    
+    
 
 w_screen = 800
 h_screen = 600
@@ -173,11 +175,11 @@ def update_screen ():
         player.UpdatePlayer(fen)
     if athena.status_parry == False :
         if athena.x > player.posX :
-            py.draw.rect(fen, (255,0,0), (athena.x_weapon-athena.w_weapon,athena.y_weapon,athena.w_weapon,athena.h_weapon))
-            py.draw.rect(fen, athena.color, (athena.x,athena.y,athena.width,athena.height))
+            py.draw.rect(fen, (255,0,0), (athena.x_weapon-athena.w_weapon,athena.y_weapon,athena.w_weapon,athena.h_weapon))#Weapon
+            py.draw.rect(fen, athena.color, (athena.x,athena.y,athena.width,athena.height))#Athena
         else :
-            py.draw.rect(fen, athena.color, (athena.x,athena.y,athena.width,athena.height))
-            py.draw.rect(fen, (255,0,0), (athena.x_weapon,athena.y_weapon,athena.w_weapon,athena.h_weapon))
+            py.draw.rect(fen, athena.color, (athena.x,athena.y,athena.width,athena.height))#Athena
+            py.draw.rect(fen, (255,0,0), (athena.x_weapon,athena.y_weapon,athena.w_weapon,athena.h_weapon))#Weapon
     else :
         py.draw.rect(fen, (255,255,0), (athena.x,athena.y,athena.width,athena.height))
     if athena.status_aoe == True :
@@ -201,6 +203,7 @@ def pattern_boss():
         athena.status_damage = True
         if action > 5 and (0 <= athena.x - player.posX <= 100 or 0 <= player.posX - athena.x <= 100) :
             athena.parry()
+            athena.movement = False
         else:
             if randint(1,3) == 1 :
                 athena.attack_aoe()
@@ -208,6 +211,7 @@ def pattern_boss():
                 athena.attack()
     else :
         athena.parry()
+        athena.movement = True
 
 
 while continuer and end_game < 1500 :
@@ -228,6 +232,7 @@ while continuer and end_game < 1500 :
             if athena.collide_attack(player.playerRect) and player.hp > 0 and athena.status_damage:
                         player.hp -= 1
                         athena.status_damage = False
+                        print(player.hp)
     for event in py.event.get():
         if event.type == py.QUIT:
             continuer = False
