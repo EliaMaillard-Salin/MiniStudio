@@ -11,7 +11,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Level Editor")
 clock = pygame.time.Clock()
 curent_element = 0
-tile_size = 100
+tile_size = 50
+scroll = 0
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -37,7 +38,7 @@ box = pygame.transform.scale(pygame.image.load("Ilan/img/tile/12.png"), (tile_si
 tile_list = [ground_1, ground_2, ground_3, ground_4, ground_5, ground_6, ground_7, ground_8, ground_9, box]
 
 # Create a 2D array to store the level
-level = [[-1 for _ in range(18)] for _ in range(7)]
+level = [[-1 for _ in range(100)] for _ in range(14)]
 
 def isInTile(x, y):
     return x >= 0 and x < len(level[0]) and y >= 0 and y < len(level)
@@ -46,15 +47,16 @@ def draw_tilemap(level: list[list[int]], drawGrid: bool = False): # Draw the lev
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] != -1:
-                screen.blit(tile_list[level[y][x]], (x * tile_size, y * tile_size))
+                screen.blit(tile_list[level[y][x]], (x * tile_size - scroll, y * tile_size))
             if drawGrid:
-                pygame.draw.rect(screen, BLACK, (x * tile_size, y * tile_size, tile_size, tile_size), 1)
+                pygame.draw.rect(screen, BLACK, (x * tile_size - scroll, y * tile_size, tile_size, tile_size), 1)
 
 # Game loop
 running = True
 while running:
     pygame.display.set_caption("Level Editor | FPS: %.2f" % clock.get_fps())
     clock.tick(60)
+    screen.fill(WHITE)
     screen.blit(bg1, (0, 0))
     screen.blit(bg2, (0, 0))
     screen.blit(bg3, (0, 0))
@@ -65,7 +67,7 @@ while running:
     # Validate the mouse position
     if 0 <= mouse_x < screen_width and 0 <= mouse_y < screen_height: # Check if the mouse is inside the screen
         # Calculate the tile position
-        tile_x = mouse_x // tile_size
+        tile_x = (mouse_x + scroll) // tile_size
         tile_y = mouse_y // tile_size
     
     # Handle events
@@ -79,6 +81,15 @@ while running:
                     for row in level:
                         file.write(",".join(map(str, row)) + "\n")
                     print("Level saved")
+            
+            # Handle scrolling events
+            if event.type == pygame.KEYDOWN:
+                if pygame.key.get_pressed()[pygame.K_LEFT]:
+                    if scroll > 0:
+                        scroll -= 100
+                elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+                    if scroll < (len(level[0]) * tile_size) - screen_width:
+                        scroll += 100
         
         # Handle mouse events
         if pygame.mouse.get_pressed()[0]: # Check if the left mouse button is pressed
@@ -105,7 +116,7 @@ while running:
 
     # Draw the elements at the mouse position
     if isInTile(tile_x, tile_y):
-        screen.blit(tile_list[curent_element], (tile_x * tile_size, tile_y * tile_size))
+        screen.blit(tile_list[curent_element], (tile_x * tile_size - scroll, tile_y * tile_size))
         
     # Update the display
     pygame.display.flip()
