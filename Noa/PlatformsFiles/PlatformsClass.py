@@ -149,7 +149,7 @@ class Plateform:
         else: 
             return False
 
-    def CheckCollision(self, Rect,): 
+    def CheckCollision(self, Rect): 
         if self.solidity : 
             self.SetMaxValue(Rect)
         else : 

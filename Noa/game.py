@@ -19,10 +19,10 @@ BG_COLOR = (144, 201, 120)
 TILE_SIZE = 40  # Assure-toi que cette valeur correspond à celle utilisée dans l'éditeur
 
 #load images
-pine1_img = pygame.image.load('asset/img/Background/pine1.png').convert_alpha()
-pine2_img = pygame.image.load('asset/img/Background/pine2.png').convert_alpha()
-mountain_img = pygame.image.load('asset/img/Background/mountain.png').convert_alpha()
-sky_img = pygame.image.load('asset/img/Background/sky_cloud.png').convert_alpha()
+pine1_img = pygame.image.load('Noa/asset/img/Background/pine1.png').convert_alpha()
+pine2_img = pygame.image.load('Noa/asset/img/Background/pine2.png').convert_alpha()
+mountain_img = pygame.image.load('Noa/asset/img/Background/mountain.png').convert_alpha()
+sky_img = pygame.image.load('Noa/asset/img/Background/sky_cloud.png').convert_alpha()
 tile_list = [pine1_img, pine2_img, mountain_img, sky_img]
 #############################################################################################
 def load_level(level_path):
@@ -71,7 +71,7 @@ while running:
 
     # Gestion des collisions
     for platform in platforms:
-        if platform.CheckCollision(player.playerRect, player.maxValues): # Vérifie si le joueur est en collision avec une plateforme
+        if platform.CheckCollision(player.playerRect): # Vérifie si le joueur est en collision avec une plateforme
             player.PlayerOnGround(platform.Rect.y)  # Ajuste cette méthode si nécessaire
 
     pygame.display.flip()  # Met à jour l'écran avec tout ce que nous avons dessiné
