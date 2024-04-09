@@ -7,6 +7,7 @@ class Player:
         self.posY = posY
         self.width = width 
         self.height = height
+        self.maxValues = [-1,-1,-1,-1, [-1, -1],[-1, -1],[-1, -1],[-1, -1]]
 
         #Player info 
         self.playerVelocity = 5
@@ -111,7 +112,35 @@ class Player:
                 return True
             return False
         
+    def CheckWalls(self): 
+        # max value : [ max top, min bottom, min left, max right, top left, top right, bottom left, bottom right]
+        if (self.posY <= self.maxValues[0] ) and (self.maxValues[0] != -1): 
+            self.posY = self.maxValues[0]
 
+        if (self.posY + self.height >= self.maxValues[1] ) and (self.maxValues[1] != -1): 
+            self.posY = self.maxValues[1] - self.height
+
+        if (self.posX <= self.maxValues[2] ) and (self.maxValues[2] != -1): 
+            self.posX = self.maxValues[2]
+
+        if (self.posX + self.width >= self.maxValues[3] ) and (self.maxValues[3] != -1): 
+            self.posY = self.maxValues[3] - self.width
+
+    #top left
+        if (self.posY <= self.maxValues[4] ) and (self.maxValues[4] != -1):
+            self.posY = self.maxValues[4] 
+
+    #top right
+        if (self.posY <= self.maxValues[5] ) and (self.posX + self.width >= self.maxValues[3] ) and (self.maxValues[5] != -1):
+            self.posY = self.maxValues[5] - self.width
+
+    #bottom left
+        if (self.posY + self.height >= self.maxValues[6] ) and (self.posX <= self.maxValues[2] ) and (self.maxValues[6] != -1):
+            self.posY = self.maxValues[6] - self.height
+
+    #bottom right
+        if (self.posY + self.height >= self.maxValues[7] ) and (self.maxValues[7] != -1):
+            self.posY = self.maxValues[7] - self.height - self.width
 
 
 
