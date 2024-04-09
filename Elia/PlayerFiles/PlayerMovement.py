@@ -37,7 +37,7 @@ class Player:
 
     def DisplayPlayer(self, surface): 
         self.playerRect = pygame.Rect(self.posX,self.posY,self.width,self.height)
-        pygame.draw.rect(surface, "white", self.playerRect)
+        pygame.draw.rect(surface, "black", self.playerRect)
         if self.isAttacking == True : 
             if pygame.time.get_ticks() - self.ticksAttack >= 0.5*1000 or self.attackDirection != self.playerDirection: 
                 self.isAttacking = False 
