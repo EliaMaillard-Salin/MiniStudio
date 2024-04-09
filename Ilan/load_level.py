@@ -46,11 +46,10 @@ def draw_level(level: list[list[int]]): # Draw the level
     for y, row in enumerate(level): # enumerate() permet d'itérer sur une liste en gardant une trace de l'index
         for x, tile_type in enumerate(row): # idem
             if tile_type != -1:  # -1 signifie pas de plateforme
-                screen.blit(tile_list[level[y][x]], (x * tile_width - scroll, y * tile_height))
+                screen.blit(tile_list[level[y][x]], (x * tile_size - scroll, y * tile_size))
 
 loading_level = load_level("Ilan/Levels/level_2.csv")
 level = [[int(x) for x in inner] for inner in loading_level]
-print(level)
 
 # Game loop
 running = True
