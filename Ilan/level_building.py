@@ -11,6 +11,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Level Editor")
 clock = pygame.time.Clock()
 curent_element = 0
+tile_size = 100
 
 # Define colors
 WHITE = (255, 255, 255)
@@ -23,20 +24,17 @@ bg1 = pygame.transform.scale(pygame.image.load("Ilan/img/background/sky_cloud.pn
 bg2 = pygame.transform.scale(pygame.image.load("Ilan/img/background/pine1.png"), screen.get_size())
 bg4 = pygame.transform.scale(pygame.image.load("Ilan/img/background/mountain.png"), screen.get_size())
 bg3 = pygame.transform.scale(pygame.image.load("Ilan/img/background/pine2.png"), screen.get_size())
-ground_1 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/0.png"), (100, 100))
-ground_2 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/1.png"), (100, 100))
-ground_3 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/2.png"), (100, 100))
-ground_4 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/3.png"), (100, 100))
-ground_5 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/4.png"), (100, 100))
-ground_6 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/5.png"), (100, 100))
-ground_7 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/6.png"), (100, 100))
-ground_8 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/7.png"), (100, 100))
-ground_9 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/8.png"), (100, 100))
-box = pygame.transform.scale(pygame.image.load("Ilan/img/tile/12.png"), (100, 100))
+ground_1 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/0.png"), (tile_size, tile_size))
+ground_2 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/1.png"), (tile_size, tile_size))
+ground_3 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/2.png"), (tile_size, tile_size))
+ground_4 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/3.png"), (tile_size, tile_size))
+ground_5 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/4.png"), (tile_size, tile_size))
+ground_6 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/5.png"), (tile_size, tile_size))
+ground_7 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/6.png"), (tile_size, tile_size))
+ground_8 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/7.png"), (tile_size, tile_size))
+ground_9 = pygame.transform.scale(pygame.image.load("Ilan/img/tile/8.png"), (tile_size, tile_size))
+box = pygame.transform.scale(pygame.image.load("Ilan/img/tile/12.png"), (tile_size, tile_size))
 tile_list = [ground_1, ground_2, ground_3, ground_4, ground_5, ground_6, ground_7, ground_8, ground_9, box]
-
-# Define tile size
-tile_size = 100
 
 # Create a 2D array to store the level
 level = [[-1 for _ in range(18)] for _ in range(7)]
@@ -44,14 +42,7 @@ level = [[-1 for _ in range(18)] for _ in range(7)]
 def isInTile(x, y):
     return x >= 0 and x < len(level[0]) and y >= 0 and y < len(level)
 
-def load_level(level_path):
-    with open(level_path, 'r') as file:
-        return list(csv.reader(file))
-loading_level = load_level("Ilan/Levels/level_1.csv")
-map = [[int(x) for x in inner] for inner in loading_level]
-print(map)
-
-def draw_world(level: list[list[int]], drawGrid: bool = False): # Draw the level
+def draw_tilemap(level: list[list[int]], drawGrid: bool = False): # Draw the level
     for y in range(len(level)):
         for x in range(len(level[y])):
             if level[y][x] != -1:
@@ -84,8 +75,7 @@ while running:
         
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_s:
-                board_string = "["
-                with open("Ilan/Levels/level_1.csv", "w") as file:
+                with open("Ilan/Levels/level_2.csv", "w") as file:
                     for row in level:
                         file.write(",".join(map(str, row)) + "\n")
                     print("Level saved")
@@ -110,9 +100,8 @@ while running:
             if isInTile(tile_x, tile_y):
                 level[tile_y][tile_x] = -1
 
-    # Draw the level
-    #draw_world(level, True)
-    draw_world(map, False)
+    # Draw the tilemap
+    draw_tilemap(level, True)
 
     # Draw the elements at the mouse position
     if isInTile(tile_x, tile_y):
