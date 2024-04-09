@@ -1,12 +1,11 @@
 import pygame
 import json
-from PlayerMovement import *
-from Plateform import *
+import PlayerFiles.PlayerMovement as Player
+import PlatformsFiles.PlatformsClass as Platforms
 
-# Initialisation de Pygame
+
 pygame.init()
 
-# Paramètres de la fenêtre
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 640
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -19,7 +18,9 @@ BG_COLOR = (144, 201, 120)
 # Paramètres du jeu
 TILE_SIZE = 40  # Assure-toi que cette valeur correspond à celle utilisée dans l'éditeur
 
-def load_level(level_path='level.json'):
+
+#############################################################################################
+def load_level(level_path='level0_data.csv'):
     with open(level_path, 'r') as file:
         return json.load(file)
 
@@ -28,15 +29,15 @@ def create_platforms(level_data):
     for y, row in enumerate(level_data):
         for x, tile_type in enumerate(row):
             if tile_type != -1:  # -1 signifie pas de plateforme
-                platforms.append(Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE))
+                platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE))
     return platforms
 
 # Charge le niveau
 level_data = load_level()
 platforms = create_platforms(level_data)
-
+#############################################################################################
 # Crée le joueur
-player = Player(50, SCREEN_HEIGHT - 130, 50, 50)  # Les valeurs initiales peuvent varier selon ton niveau
+player = Player.Player(50, SCREEN_HEIGHT - 130, 50, 50)  # Les valeurs initiales peuvent varier selon ton niveau
 
 # Paramètres de la boucle de jeu
 clock = pygame.time.Clock()
