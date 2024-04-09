@@ -10,6 +10,7 @@ class Plateform:
         self.posY = posY        
         self.Rect = pygame.Rect(posX,posY,width,height)
         self.color = color
+        self.solidCollide = False
 
     def CreatePlateform(self,plateformeList):
         plateformeList.append(self)
@@ -42,7 +43,7 @@ class Plateform:
         self.Rect = pygame.Rect(self.posX,self.posY,self.width,self.height)
 
 
-    def SetMaxValue(self, objectRect, ): 
+    def SetMaxValue(self, objectRect): 
         
 
         if (self.Rect.left + self.Rect.width > objectRect.left) and  (self.Rect.left < objectRect.left + objectRect.width ):
@@ -144,13 +145,16 @@ class Plateform:
         if (objectToCollide.posX <= self.maxValues[7][1] ) and (objectToCollide.posY <= self.maxValues[7][0]) and (self.maxValues[7][0] != -1) and (self.maxValues[7][1] != -1):
             objectToCollide.posX = self.maxValues[7][1]
             objectToCollide.posY = self.maxValues[7][0]
+        
         if setOnGround : 
             return True
         else: 
             return False
 
-    def CheckCollision(self, Rect,): 
+    def CheckCollision(self, Rect): 
+
         if self.solidity : 
+            self.maxValues = [-1,-1,-1,-1, [-1, -1],[-1, -1],[-1, -1],[-1, -1]]
             self.SetMaxValue(Rect)
         else : 
             if self.PlateformCollision(Rect) :
