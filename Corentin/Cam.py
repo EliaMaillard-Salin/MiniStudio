@@ -1,14 +1,11 @@
 import pygame
-import PlayerMovement 
-import Plateform
 
-"""
-Manque à verifier avec le DeltaTime
-"""
+import PlayerMovement 
+import PlatformsClass
 
 #Screen dimention
-s_width : int = 1600
-s_height : int = 900
+s_width : float = 1600
+s_height : float = 900
 
 ongoing : bool = True
 
@@ -23,20 +20,22 @@ green : tuple = (0, 255, 0)
 
 #Player parameter
 
-player_p = pygame.image.load("Pictures/Test.png")
+player = PlayerMovement.Player(10, 600, 32, 32)
 
+camvelocity = player.playerVelocity
+camverticalvelocity = player.jumpForce
 #Element parametter
-plateform = Plateform.Plateform(0, 0, 0, 0, gray)
+plateform = PlatformsClass.Plateform(0, 0, 0, 0, gray, True)
 
 allPlateforme = []
 
-P1 = Plateform.Plateform(800, 400, 40, 100, "red")
+P1 = PlatformsClass.Plateform(800, 400, 40, 100, "red", True)
 P1.CreatePlateform(allPlateforme)
 
-P2 = Plateform.Plateform(400, 40, 35, 120, "blue")
+P2 = PlatformsClass.Plateform(400, 40, 35, 120, "blue", True)
 P2.CreatePlateform(allPlateforme)
 
-P3 = Plateform.Plateform(0, 800, 1600, 120, "green")
+P3 = PlatformsClass.Plateform(0, 800, 1600, 120, "green", True)
 P3.CreatePlateform(allPlateforme)
 
 # Set the camera
@@ -49,17 +48,15 @@ class Camera:
 
         self.pos_cam_x : int = s_width//2
         self.pos_cam_y : int = s_height//4
-
         
         self.oldPosX : int = s_width//2
         self.oldPosY : int = s_height//4
 
+        self.s_camX = s_width//2
+        self.s_camY = s_height//3
 
-        self.camVelocity = 5
-        self.camDirection = 0
-
-
-
+        self.camVelocity = camvelocity
+        self.camVerticalVelocity = camverticalvelocity
 
         self.limit_left : int = 0
         self.limit_right : int = 3200
@@ -69,23 +66,27 @@ class Camera:
     def CamFollow(self, player):
         ispressed = pygame.key.get_pressed()
 
-        if ispressed[pygame.K_d] and self.pos_cam_x < self.limit_right:
+        if ispressed[pygame.K_d] and self.pos_cam_x < self.limit_right and player.posX >= self.s_camX :
+
             self.pos_cam_x += self.camVelocity
             self.camera_offset_x -= self.camVelocity
+            self.s_camX += self.camVelocity
 
-        if ispressed[pygame.K_q] and  self.pos_cam_x > self.limit_left:
+        if ispressed[pygame.K_q] and  self.pos_cam_x > self.limit_left and player.posX <= self.s_camX :
+
             self.pos_cam_x -=  self.camVelocity
             cam.camera_offset_x +=  self.camVelocity
+            self.s_camX -= self.camVelocity
 
-        if player.posY < self.pos_cam_y  and  self.pos_cam_y > self.limit_top: 
+        if player.posY < self.pos_cam_y  and  self.pos_cam_y > self.limit_top and player.posY <= self.s_camY: 
+
             self.pos_cam_y += player.verticalVelocity
+
         if player.posY > self.pos_cam_y  and  self.pos_cam_y < self.limit_bottom: 
+
             self.pos_cam_y  += player.verticalVelocity
-        
 
 cam = Camera()
-
-player = PlayerMovement.Player(10, 600, 32, 32)
 
 #Game
 while ongoing:
@@ -106,6 +107,10 @@ while ongoing:
     for i in allPlateforme:
         if(i.CheckCollision(player.playerRect)):
             player.PlayerOnGround(i.Rect.top)
+        if i.solidity: 
+            if(i.CheckWalls(player)) :
+                player.PlayerOnGround(i.Rect.top) 
+
 
     cam.CamFollow(player)
 
@@ -118,7 +123,7 @@ while ongoing:
         i.PlateformMove(cam,player)
         i.Display(screen)
 
-    player.DisplayPlayer(screen)
+    player.DisplayPlayer(screen, cam)
     
 
     
