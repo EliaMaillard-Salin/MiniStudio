@@ -1,13 +1,19 @@
 import pygame
+from pygame import mixer
 import PlayerMovement as Player
 import PlatformsClass as Platforms
 import BotInfo as Bot
 import Collision
 
-
+pygame.mixer.pre_init(44100, -16 , 2 , 512)
+mixer.init
 pygame.init()
+
 # Load Sound 
-OST = pygame.mixer.Sound('')
+OST = pygame.mixer.Sound('Sound/Music/a_travers_la_Grece.mp3')
+OST.set_volume(0.5)
+OST.play()
+
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width,screen_height))
