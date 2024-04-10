@@ -3,35 +3,34 @@ import pygame
 
 
 class Props: 
-    def __init__(self, hasCollide, isFood, posX, posY, width, height, hasGravity, weight, indxImg):
-        self.hasCollide = hasCollide
-        self.isFood = isFood
-        self.posX = posX
-        self.posY = posY
-        self.width = width 
-        self.height = height
-        self.hasGravity = hasGravity
-        self.onGround = False
-        self.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
-        self.propsImg = [pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol.png"), (60,55)), 
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol de tentacules.png"), (85,60)),
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/fasolada.png"),  (60,55)),
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/moussaka.png"),  (60,55))
-                        ]
+    def __init__(self, hasCollide : bool , isFood : bool , posX : int, posY : int, width : int, height : int, hasGravity :bool, weight : int, indxImg :bool):
+        self.hasCollide : bool = hasCollide
+        self.isFood : bool = isFood
+        self.posX : int = posX
+        self.posY : int = posY
+        self.width : int = width 
+        self.height : int = height
+        self.hasGravity : bool = hasGravity
+        self.onGround : bool = False
+        self.Rect : pygame.rect.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
+        self.propsImg  : list[pygame.Surface] =   [pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol.png"), (60,55)), 
+                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol de tentacules.png"), (85,60)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/fasolada.png"),  (60,55)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/moussaka.png"),  (60,55))
+                                                        ]
         
-        self.img = self.propsImg[indxImg]
-        self.maxValues = [-1,-1,-1,-1, [-1, -1],[-1, -1],[-1, -1],[-1, -1]]
+        self.img : pygame.Surface = self.propsImg[indxImg]
         
-        self.dashVelocity = 0
-        self.weight = weight        
-        self.verticalVelocity = 0
-        self.gravity = 30 * self.weight
+        self.dashVelocity : int = 0
+        self.weight :int = weight        
+        self.verticalVelocity : int = 0
+        self.gravity : int = 30 * self.weight
         
 
-    def DisplayProp(self,surface, camPos : tuple[int,int]  ): 
+    def DisplayProp(self,surface : pygame.Surface , camPos : tuple[int,int]  ) -> None: 
         surface.blit(self.img, (self.posX - camPos[0], self.posY - camPos[1] ) )
 
-    def CheckFalling(self, dt):
+    def CheckFalling(self, dt : int ):
         if self.hasGravity:
             if self.onGround == False:
                 self.verticalVelocity += self.gravity 
@@ -72,7 +71,7 @@ class Props:
         
         return side, minDistance
 
-    def Collider(self, player, dt): 
+    def Collider(self, player, dt : int )  -> None : 
 
         if self.hasCollide : 
             if self.PropsGetCollision(player.playerRect)[0] == 3:

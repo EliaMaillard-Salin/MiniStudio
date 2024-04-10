@@ -1,0 +1,12 @@
+https://coderslegacy.com/python/python-pygame-tutorial/
+
+askpython.com/python-modules/pygame-looping-background
+
+http://pcg.wikidot.com/
+
+https://www.pygame.org/docs/
+
+https://stackoverflow.com/questions/11603222/allowing-resizing-window-pygame
+
+https://docs.replit.com/tutorials/python/2d-platform-game
+

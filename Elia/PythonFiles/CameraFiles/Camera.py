@@ -9,10 +9,10 @@ class Camera:
         self.pos_cam_x : int = 0
         self.pos_cam_y : int = 0
         
-        self.s_camX = s_width//2
-        self.s_camY = s_height//3
+        self.s_camX : int = s_width//2
+        self.s_camY : int = s_height//3
 
-        self.camVelocity = camvelocity
+        self.camVelocity: int = camvelocity
 
         self.limit_left : int = 0
         self.limit_right : int = 3200
@@ -20,7 +20,7 @@ class Camera:
         self.limit_bottom : int = s_height//4
 
 
-    def CamFollow(self, player , dt):
+    def CamFollow(self, player , dt :int ) -> None:
 
 
         ispressed = pygame.key.get_pressed()
