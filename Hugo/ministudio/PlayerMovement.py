@@ -1,5 +1,16 @@
 import pygame
 
+import BotInfo as Bot
+
+
+
+
+
+
+
+
+bot = Bot.Bot(530,540,40,40)
+
 class Player:
     def __init__(self, posX, posY, width, height):
 
@@ -17,6 +28,7 @@ class Player:
         self.playerDirection = 0
         self.onGround = False
         self.newGround = 0
+        self.hp = 4
 
         # Action Bools 
         self.isDashing = False
