@@ -1,4 +1,3 @@
-import pygame, PlatformsFiles.PlatformsClass, PlayerFiles.PlayerMovement
 
 import pygame
 import PlayerFiles.PlayerMovement as Player
@@ -77,10 +76,17 @@ PGroundTop.CreatePlateform(allPlateforms)
 
 
 
+# Props Images : [0 - 3, Food ; 0 - Empty, 1 - Poulpe, 2- Fasolada, 3 - Moussaka
+#                
+# ]
+
 allProps = []
 
-square = Prop.Props(True,False,50,350,40,40,True,1,None)
+square = Prop.Props(True,False,50,350,40,40,True,1,0)
 allProps.append(square)
+
+food = Prop.Props(False,True,200,850,50,50,False,1,1)
+allProps.append(food)
 
 
 def DisplayImagesBG(Surface): 
@@ -146,6 +152,7 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
             player.Attack() 
             player.LooseOrWinHP(-1)
+
 
 
     player.Movement()

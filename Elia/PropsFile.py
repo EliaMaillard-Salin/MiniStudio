@@ -3,7 +3,7 @@ import pygame
 
 
 class Props: 
-    def __init__(self, hasCollide, isFood, posX, posY, width, height, hasGravity, weight, img):
+    def __init__(self, hasCollide, isFood, posX, posY, width, height, hasGravity, weight, indxImg):
         self.hasCollide = hasCollide
         self.isFood = isFood
         self.posX = posX
@@ -13,19 +13,26 @@ class Props:
         self.hasGravity = hasGravity
         self.onGround = False
         self.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
-        self.img = img
+        self.propsImg = [pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol.png"), (90,51)), 
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol de tentacules.png"), (90,51)),
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/fasolada.png"), (50,50)),
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/moussaka.png"), (50,50))
+                        ]
+        
+        self.img = self.propsImg[indxImg]
         self.maxValues = [-1,-1,-1,-1, [-1, -1],[-1, -1],[-1, -1],[-1, -1]]
         
         self.dashVelocity = 0
-        self.count = 0
         self.weight = weight        
         self.verticalVelocity = 0
         self.gravity = 0.5 * self.weight
+        
+
 
 
     def DisplayProp(self,surface): 
         self.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
-        pygame.draw.rect(surface,"purple",self.Rect)
+        surface.blit(self.img, (self.posX, self.posY))
 
     def CheckFalling(self):
         if self.hasGravity:
@@ -140,27 +147,43 @@ class Props:
         else: 
             return False
     
+    
+    def CollisionOnNoCollider(self, player):
+        if (player.posX + player.width >=self.posX and 
+            player.posX <=self.posX +self.width and
+            player.posY + player.height >=self.posY and 
+            player.posY <=self.posY +self.height):
+            return True
+        return False   
+
+
     def Collider(self, player): 
+
         Ontop = False
         self.SetPropMaxValues(player.playerRect)
+
         if self.hasCollide and not self.CheckPropWall(player): 
-            if self.count > 0 :
-                self.count -= 1
             if player.isDashing == True : 
-                self.dashVelocity = 10
-                self.count = 25
-            elif self.count == 0: 
+                self.dashVelocity = (player.dashVelocity / self.weight)
+            else: 
                 self.dashVelocity = 0
             if ( (self.posY + self.height) >= player.posY) and ( self.posY <=  (player.posY + player.height) ) and not Ontop:
+                
                 if (player.posX + player.width >= self.posX) and (player.posX < self.posX): 
                    self.posX += player.playerVelocity / self.weight + self.dashVelocity
                    player.posX -= self.weight 
 
                 if (player.posX <= (self.posX + self.width)) and ((player.posX + player.width) > self.posX+self.width): 
-                    self.posX -= player.playerVelocity / self.weight - self.dashVelocity
+                    self.posX -= (player.playerVelocity / self.weight) + self.dashVelocity
                     player.posX += self.weight 
-        else :
+        elif self.hasCollide :
             player.PlayerOnGround(self.posY)
 
-                
+        if self.isFood : 
+            if(self.CollisionOnNoCollider(player) ) :
+                player.LooseOrWinHP(1)
+                self.isFood = False
+                self.img = self.propsImg[0]
+            
+     
             

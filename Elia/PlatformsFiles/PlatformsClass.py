@@ -145,7 +145,7 @@ class Plateform:
         if (objectToCollide.posX <= self.maxValues[7][1] ) and (objectToCollide.posY <= self.maxValues[7][0]) and (self.maxValues[7][0] != -1) and (self.maxValues[7][1] != -1):
             objectToCollide.posX = self.maxValues[7][1]
             objectToCollide.posY = self.maxValues[7][0]
-        
+            
         if setOnGround : 
             return True
         else: 

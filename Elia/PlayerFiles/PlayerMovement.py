@@ -46,7 +46,8 @@ class Player:
         self.dashImages = [ pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash.png"),  (174,104)  ), 
                             pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash3.png"), (174,104)  ), 
                             pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash2.png"), (174,104)  ), 
-                            pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash1.png"), (174,104)  ) ]
+                            pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash1.png"), (174,104)  ),
+                            pygame.transform.scale( pygame.image.load("Elia/Asset/UI/marteauDash0.png"), (174,104)  ) ]
 
 
 
@@ -88,7 +89,7 @@ class Player:
     # Gestion du dash
         if keys[pygame.K_LSHIFT] and not self.isDashing and self.dashCoolDown <= 0:
             self.isDashing = True
-            self.dashState = 3
+            self.dashState = 4
             self.dashCoolDown = 60
             self.dashDirection = 0
             if keys[pygame.K_q]:
@@ -136,6 +137,13 @@ class Player:
             self.verticalVelocity = 0
             self.isJumping = False  
             self.onGround = False 
+
+    def StopJump(self):
+        if(self.isJumping == False):
+            return
+
+        self.verticalVelocity = 0
+        self.isJumping = False  
 
     def AttackCollision(self, objectRect):
         if self.isAttacking == True : 
