@@ -1,51 +1,11 @@
 import pygame
 import sys
-
-
+import BotInfo as Bot
+import Collision 
+import PlayerMovement as Player
 
 # Initialisation de Pygame
 pygame.init()
-
-
-def collision(rectA: pygame.rect.Rect, rectB: pygame.rect.Rect):
-    # 0 None
-    # 1 Left
-    # 2 Top
-    # 3 Bottom
-    # 4 Right
- 
-    if rectA.left > rectB.right:
-        return 0
-    
-    if rectA.right < rectB.left:
-        return 0
-
-    if rectA.top > rectB.bottom:
-        return 0
-
-    if rectA.bottom < rectB.top:
-        return 0
-
-    #calculer les 4 distanes, on stockera dans un tableau de 4 cases
-    distance = list(range(0))    
-    distance.append(rectA.right - rectB.left) #0
-    distance.append(rectA.bottom - rectB.top) #1
-    distance.append(rectB.bottom - rectA.top) #2
-    distance.append(rectB.right - rectA.left) #3
-    print(distance)
-   
-    #on parcourt le tableau, on cherche la distance la plus grande
-    smallest = 1000
-    for i in range(len(distance)) :
-        if distance[i] < smallest :
-            smallest = distance[i]
-            index = i
-    return index + 1  
- 
-  
-
-    
-
 
 # Paramètres de la fenêtre
 screen_width = 800
@@ -76,16 +36,9 @@ jump_attack = 5
 gravity = 0.5
 vertical_velocity = 0
 
-# Paramètre d'un bot
-pv = 1
-bot_x = 530
-bot_y = 540
-bot_width = 40
-bot_height = 40
-bot_velocity = 1
-checkpoint1 = True
-checkpoint2 = False
-
+# Paramètre Bot
+bot = Bot.Bot(530,540,40,40)
+player = Player.Player(50,50,50,50)
 
 # Plateformes
 platforms = [(0, screen_height - 20, screen_width, 20),  # Sol
@@ -93,11 +46,6 @@ platforms = [(0, screen_height - 20, screen_width, 20),  # Sol
              (50, 400, 200, 20),
              (500, 300, 200, 20),
              (50, 200, 200, 20)]
-
-check = [(50,550,20,20)]
-check1 = [(750,550,20,20)]
-
-
 
 # Horloge pour contrôler les FPS
 clock = pygame.time.Clock()
@@ -143,59 +91,32 @@ while running:
         if keys[pygame.K_d]:
             player_x += player_velocity
 
-    
-
-
-    if checkpoint1:
-        bot_x -= bot_velocity
-    if checkpoint2:
-        bot_x += bot_velocity
-  
-
-
     # Appliquer la gravité
     vertical_velocity += gravity
     player_y += vertical_velocity
 
 
     # Déstruction d'un bot en sautant dessus
-    bot_rect = pygame.Rect(bot_x,bot_y,bot_width,bot_height)
+    bot_rect = pygame.Rect(bot.posX,bot.posY,bot.Width,bot.Height)
     player_rect = pygame.Rect(player_x, player_y, player_width, player_height)
-    col = collision(player_rect,bot_rect)
+    col = Collision.collision(player_rect,bot_rect)
     if col == 2 :
-        checkpoint1 = False
-        checkpoint2 = False
-        bot_height = 0
-        bot_width = 0
-        bot_x = -1111111
-        bot_y = -1111111
-        pv -= 1
+        bot.Checkpoint1 = False
+        bot.Checkpoint2 = False
+        bot.Height = 0
+        bot.Width = 0
+        bot.posX = -11111
+        bot.posY = -11111
         vertical_velocity = -jump_attack
     if col != 0 and col != 2:
         player_height = 0
-        player_width = 0
-        player_x = -11111
-        player_y = -11111
-   
-
-       
-       
-
-    # Vérifier la collision avec le checkpoint 1 pour bot
-    for plateforms in check:
-        check_rect = pygame.Rect(50,550,20,20)
-        if bot_rect.colliderect(check_rect):
-            checkpoint1 = False
-            checkpoint2 = True
+        player_width = 0   
 
 
-            
-    # Vérifier la collision avec le checkpoint 1 pour bot
-    for plateforms in check1:
-        check_rect = pygame.Rect(750,550,20,20)
-        if bot_rect.colliderect(check_rect):
-            checkpoint2 = False
-            checkpoint1 = True
+    player.Movement()
+
+    bot.MovementBot()
+    bot.CheckCollision()
 
     # Vérifier la collision avec les plateformes
     for platform in platforms:
@@ -212,25 +133,11 @@ while running:
     screen.fill(black)
     for platform in platforms:
         pygame.draw.rect(screen, green, platform)
-    
-    if pv == 1:
-        pygame.draw.rect(screen, bleu, (bot_x, bot_y, bot_width, bot_height))
 
-    pygame.draw.rect(screen, black,  plateforms)
-    pygame.draw.rect(screen, black,  plateforms)
-    pygame.draw.rect(screen, white, (player_x, player_y, player_width, player_height))
+    bot.DisplayBot(screen)
+    bot.DisplayCheckBot(screen)
 
-    if hp == 1:
-            pygame.draw.rect(screen, white, (player_x, player_y, player_width, player_height))
-
-
-
-
-
-
-
-
-
+    player.DisplayPlayer(screen)    
     pygame.display.update()
 
 pygame.quit()
