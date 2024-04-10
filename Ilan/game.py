@@ -16,14 +16,24 @@ WHITE = (255, 255, 255)
 BG_COLOR = (144, 201, 120)
 
 # Paramètres du jeu
-TILE_SIZE = 40  # Assure-toi que cette valeur correspond à celle utilisée dans l'éditeur
+ROWS = 16
+TILE_SIZE = SCREEN_HEIGHT // ROWS # Assure-toi que cette valeur correspond à celle utilisée dans l'éditeur
+TILE_TYPES = 12
 
 #load images
-pine1_img = pygame.image.load('Noa/asset/img/Background/pine1.png').convert_alpha()
-pine2_img = pygame.image.load('Noa/asset/img/Background/pine2.png').convert_alpha()
-mountain_img = pygame.image.load('Noa/asset/img/Background/mountain.png').convert_alpha()
-sky_img = pygame.image.load('Noa/asset/img/Background/sky_cloud.png').convert_alpha()
-tile_list = [pine1_img, pine2_img, mountain_img, sky_img]
+pine1_img = pygame.image.load('Ilan/asset/Background/pine1.png').convert_alpha()
+pine2_img = pygame.image.load('Ilan/asset/Background/pine2.png').convert_alpha()
+mountain_img = pygame.image.load('Ilan/asset/Background/mountain.png').convert_alpha()
+sky_img = pygame.image.load('Ilan/asset/Background/sky_cloud.png').convert_alpha()
+
+# Store textures in a list
+textures = []
+for x in range(TILE_TYPES):
+	img = pygame.image.load(f'Ilan/asset/Blocs/{x}.png').convert_alpha()
+	img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+	textures.append(img)
+# print(textures)
+print(textures[6])
 #############################################################################################
 def load_level(level_path):
     with open(level_path, 'r') as file:
@@ -34,20 +44,23 @@ def create_platforms(level_data):
     for y, row in enumerate(level_data):
         for x, tile_type in enumerate(row):
             if tile_type != -1:  # -1 signifie pas de plateforme
-                platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, WHITE, False))
+                platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, textures[level_data[y][x]], False))
     return platforms
 
 # Charge le niveau
-loading_level_data = load_level("level0_data.csv")
-level_data = [[int(x) for x in inner] for inner in loading_level_data]
-platforms = create_platforms(level_data)
+loading_level_data = load_level("Ilan/Levels/level0_data.csv")
+level_data = [[int(x) for x in inner] for inner in loading_level_data] # Convertit les valeurs en entiers
+# print(level_data)
+platforms = create_platforms(level_data) # Crée les plateformes à partir des données du niveau
+# print(platforms)
 #############################################################################################
+
 # Crée le joueur
 player = Player.Player(50, SCREEN_HEIGHT - 130, 50, 50)  # Les valeurs initiales peuvent varier selon ton niveau
 
 # Paramètres de la boucle de jeu
 clock = pygame.time.Clock()
-running = True
+running = Trued
 
 while running:
     for event in pygame.event.get():
@@ -63,15 +76,16 @@ while running:
 
     # Dessine les plateformes
     for platform in platforms:
-        platform.Display(screen)
-
+        platform.Display(screen, platform.posX, platform.posY)
+    
+    
     # Met à jour et dessine le joueur
     player.Movement()
     player.DisplayPlayer(screen)
 
     # Gestion des collisions
     for platform in platforms:
-        if platform.CheckCollision(player.playerRect): # Vérifie si le joueur est en collision avec une plateforme
+        if platform.CheckCollision(player.playerRect, player.maxValues): # Vérifie si le joueur est en collision avec une plateforme
             player.PlayerOnGround(platform.Rect.y)  # Ajuste cette méthode si nécessaire
 
     pygame.display.flip()  # Met à jour l'écran avec tout ce que nous avons dessiné

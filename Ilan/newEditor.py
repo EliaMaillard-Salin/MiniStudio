@@ -18,7 +18,7 @@ pygame.display.set_caption('Level Editor')
 ROWS = 16
 MAX_COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
-TILE_TYPES = 4
+TILE_TYPES = 12
 level = 0
 current_tile = 0
 scroll_left = False
@@ -27,10 +27,10 @@ scroll = 0
 scroll_speed = 1
 
 #load images
-pine1_img = pygame.image.load('Noa/asset/img/Background/pine1.png').convert_alpha()
-pine2_img = pygame.image.load('Noa/asset/img/Background/pine2.png').convert_alpha()
-mountain_img = pygame.image.load('Noa/asset/img/Background/mountain.png').convert_alpha()
-sky_img = pygame.image.load('Noa/asset/img/Background/sky_cloud.png').convert_alpha()
+pine1_img = pygame.image.load('Ilan/asset/Background/pine1.png').convert_alpha()
+pine2_img = pygame.image.load('Ilan/asset/Background/pine2.png').convert_alpha()
+mountain_img = pygame.image.load('Ilan/asset/Background/mountain.png').convert_alpha()
+sky_img = pygame.image.load('Ilan/asset/Background/sky_cloud.png').convert_alpha()
 
 # Colors
 GREEN = (144, 201, 120)
@@ -40,12 +40,12 @@ GREY = (50, 50, 50)
 # Store tiles in a list
 img_list = []
 for x in range(TILE_TYPES):
-	img = pygame.image.load(f'Noa/asset/img/tiles/{x}.png').convert_alpha()
+	img = pygame.image.load(f'Ilan/asset/Blocs/{x}.png').convert_alpha()
 	img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
 	img_list.append(img)
 
-save_img = pygame.image.load('Noa/asset/img/save_btn.png').convert_alpha()
-load_img = pygame.image.load('Noa/asset/img/load_btn.png').convert_alpha()
+save_img = pygame.image.load('Ilan/asset/save_btn.png').convert_alpha()
+load_img = pygame.image.load('Ilan/asset/load_btn.png').convert_alpha()
 
 GREEN = (144, 201, 120)
 WHITE = (255, 255, 255)
@@ -76,7 +76,7 @@ def draw_text(text, font, text_col, x, y):
 
 #create ground
 for tile in range(0, MAX_COLS):
-	world_data[ROWS - 1][tile] = 0
+	world_data[ROWS - 1][tile] = 3
  
  #draw grid
 def draw_grid():
@@ -125,18 +125,19 @@ while run:
 	#save and load data
 	if save_button.draw(screen):
 		#save level data
-		with open(f'level{level}_data.csv', 'w', newline='') as csvfile:
-			writer = csv.writer(csvfile, delimiter = ',')
+		with open(f"Ilan/Levels/level{level}_data.csv", "w") as file:
 			for row in world_data:
-				writer.writerow(row)
+				file.write(",".join(map(str, row)) + "\n")
+			print("Level saved")
 
 	if load_button.draw(screen):
 		scroll = 0
-		with open(f'level{level}_data.csv', newline='') as csvfile:
+		with open(f'Ilan/Levels/level{level}_data.csv') as csvfile:
 			reader = csv.reader(csvfile, delimiter = ',')
 			for x, row in enumerate(reader):
 				for y, tile in enumerate(row):
 					world_data[x][y] = int(tile)
+			print(f'Level {level} loaded')
 		
 	#draw tile panel and tiles
 	pygame.draw.rect(screen, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
@@ -157,6 +158,7 @@ while run:
 		scroll += 5 * scroll_speed
 
 	#add new tiles to the screen
+
 	#get mouse position
 	pos = pygame.mouse.get_pos()
 	x = (pos[0] + scroll) // TILE_SIZE
