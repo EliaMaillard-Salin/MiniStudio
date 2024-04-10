@@ -20,8 +20,11 @@ class Props:
         self.propsImg  : list[pygame.Surface] =   [pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol.png"), (60,55)), 
                                                         pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol de tentacules.png"), (85,60)),
                                                         pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/fasolada.png"),  (60,55)),
-                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/moussaka.png"),  (60,55))
-                                                        ]
+                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/moussaka.png"),  (60,55) ),
+                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/Agora.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/coinDionysos.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/coin_Temple_de_Zeus.png"), (50,50))
+                                                    ]  
         
         self.img : pygame.Surface = self.propsImg[indxImg]
         

@@ -1,26 +1,30 @@
 
 import pygame
-
+import sys
 
 class Plateform: 
      
-    def __init__(self,posX,posY,width,height,color,solidity): 
-        self.solidity = solidity
-        self.posX = posX
-        self.posY = posY   
-        self.width = width
-        self.height = height     
-        self.Rect = pygame.Rect(posX,posY,width,height)
-        self.color = color
+    def __init__(self,posX : int ,posY : int ,width : int ,height : int, color : str | None , texture : pygame.Surface | None , solidity : bool ): 
+        self.solidity : bool = solidity
+        self.posX : int  = posX
+        self.posY : int = posY   
+        self.width : int = width
+        self.height : int = height     
+        self.Rect : pygame.Rect = pygame.Rect(posX,posY,width,height)
+        self.color : str | None = color
+        self.img : pygame.Surface | None = texture
 
 
 
-    def CreatePlateform(self,plateformeList):
+    def CreatePlateform(self, plateformeList : list ) -> None:
         plateformeList.append(self)
 
-    def Display(self,surface, camPos : tuple[int,int]): 
-        display_rect = pygame.Rect(self.posX - camPos[0], self.posY - camPos[1], self.width, self.height )
-        pygame.draw.rect(surface,self.color, display_rect)
+    def Display(self,surface : pygame.Surface , camPos : tuple[int,int]) -> None: 
+        if self.color != None: 
+            display_rect = pygame.Rect(self.posX - camPos[0], self.posY - camPos[1], self.width, self.height )
+            pygame.draw.rect(surface,self.color, display_rect)
+        if self.img != None : 
+            surface.blit(self.img, (self.posX - camPos[0], self.posY - camPos[1]))
 
 
     def GetCollision(self, rect: pygame.rect.Rect) -> tuple[int, int]:
