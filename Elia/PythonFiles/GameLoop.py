@@ -100,6 +100,34 @@ while running:
 
         if side == 2:
             player.PlayerOnGround(i.Rect.top)
+    
+
+
+    for j in allProps : 
+        j.onGround = False
+        for i in allPlateforms: 
+            if j.hasCollide == True: 
+                side, distance = i.GetCollision(j.Rect)
+
+                if side == 0:
+                    continue
+
+                side -= 1
+
+                if side == 3 and i.solidity == False:
+                    continue
+
+                direction = sides[side]
+                j.posX += direction[0] * distance
+                j.posY += direction[1] * distance
+
+                if side == 2:
+                    j.onGround = True
+
+        j.Collider(player, dt)
+        j.CheckFalling(dt)
+        
+
 
 
     # Affichage
@@ -109,6 +137,8 @@ while running:
     for i in allPlateforms:
         i.Display(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
 
+    for j in allProps :
+        j.DisplayProp(screen, [cam.pos_cam_x, cam.pos_cam_y ])
 
     player.DisplayPlayer(screen, cam)
 

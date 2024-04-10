@@ -13,10 +13,10 @@ class Props:
         self.hasGravity = hasGravity
         self.onGround = False
         self.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
-        self.propsImg = [pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol.png"), (50,50)), 
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol de tentacules.png"), (50,50)),
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/fasolada.png"), (50,50)),
-                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/moussaka.png"), (50,50))
+        self.propsImg = [pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol.png"), (60,55)), 
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/bol de tentacules.png"), (85,60)),
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/fasolada.png"),  (60,55)),
+                         pygame.transform.scale(pygame.image.load("Elia/Asset/Props/moussaka.png"),  (60,55))
                         ]
         
         self.img = self.propsImg[indxImg]
@@ -25,7 +25,7 @@ class Props:
         self.dashVelocity = 0
         self.weight = weight        
         self.verticalVelocity = 0
-        self.gravity = 0.5 * self.weight
+        self.gravity = 30 * self.weight
         
 
     def DisplayProp(self,surface, camPos : tuple[int,int]  ): 
@@ -36,6 +36,7 @@ class Props:
             if self.onGround == False:
                 self.verticalVelocity += self.gravity 
                 self.posY += self.verticalVelocity * dt
+        self.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
 
     def PropsGetCollision(self, rect: pygame.rect.Rect) -> tuple[int, int]:
         #0 => None
@@ -71,26 +72,30 @@ class Props:
         
         return side, minDistance
 
-    def Collider(self, player): 
+    def Collider(self, player, dt): 
 
-        if self.hasCollide and self.PropsGetCollision(player.playerRect) != 3: 
-            if player.isDashing == True : 
-                self.dashVelocity = (player.dashVelocity / self.weight)
-            else: 
-                self.dashVelocity = 0
+        if self.hasCollide : 
+            if self.PropsGetCollision(player.playerRect)[0] == 3:
+                player.PlayerOnGround(self.posY)
+            elif self.PropsGetCollision(player.playerRect)[0] != 0: 
+                if player.isDashing == True : 
+                        self.dashVelocity = (player.dashVelocity / self.weight)
+                else: 
+                    self.dashVelocity = 0
 
-            if ( (self.posY + self.height) >= player.posY) and ( self.posY <=  (player.posY + player.height) ):
-                
-                if (player.posX + player.width >= self.posX) and (player.posX < self.posX): 
-                   self.posX += player.playerVelocity / self.weight + self.dashVelocity
-                   player.posX -= self.weight 
+                if ( (self.posY + self.height) >= player.posY) and ( self.posY <=  (player.posY + player.height) ):
+                    
+                    if (player.posX + player.width >= self.posX) and (player.posX < self.posX): 
+                        self.posX +=  ( player.playerVelocity / self.weight + self.dashVelocity ) * dt
+                        player.posX -= self.weight * dt
 
-                if (player.posX <= (self.posX + self.width)) and ((player.posX + player.width) > self.posX+self.width): 
-                    self.posX -= (player.playerVelocity / self.weight) + self.dashVelocity
-                    player.posX += self.weight 
+                    if (player.posX <= (self.posX + self.width)) and ((player.posX + player.width) > self.posX+self.width): 
+                        self.posX -=  ( (player.playerVelocity / self.weight) + self.dashVelocity ) * dt
+                        player.posX += self.weight * dt
 
+            
         if self.isFood : 
-            if self.PropsGetCollision(player.playerRect) != [0,0] :
+            if self.PropsGetCollision(player.playerRect) != (0,0) :
                 player.LooseOrWinHP(1)
                 self.isFood = False
                 self.img = self.propsImg[0]
