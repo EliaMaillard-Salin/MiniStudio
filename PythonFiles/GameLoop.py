@@ -88,16 +88,16 @@ P6.CreatePlateform(platforms)
 
 
 
-backGround = pygame.image.load("PythonFiles/Asset/PNG/BackGround.png")
+backGround = pygame.image.load("PythonFiles/Assets/PNG/BackGround.png")
 
 
 allProps : list[Props.Props] = []
 
 
-square = Props.Props(True,False,20,150,50,50,True,1,0)
+square = Props.Props(True,False,20,150,50,50,True,1,0, False)
 allProps.append(square)
 
-food = Props.Props(False,True,650,300,50,50,False,1,1)
+food = Props.Props(False,True,650,300,50,50,False,1,1, False)
 allProps.append(food)
 
 cam = Camera.Camera(SCREEN_WIDTH,SCREEN_HEIGHT,player.playerVelocity)
