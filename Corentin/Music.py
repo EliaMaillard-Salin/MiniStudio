@@ -2,6 +2,7 @@ import pygame
 
 pygame.init()
 pygame.mixer.init()
+pygame.mixer.set_num_channels(8) #valeur de base = 8
 
 s_width : float = 1600
 s_height : float = 900
@@ -15,10 +16,10 @@ class Sound:
         self.soundThemeList : list = ['Corentin/MusicBank/OST_Jeux_Main_Menu.mp3', 'MusicBank/Athena.mp3', 'MusicBank/a_travers_la_Grece.mp3', 'MusicBank/Pour_Aglae.mp3']
 
         #soubdSFXList : [Dash, Jump, Death]
-        self.soundSFXList : list = ['MusicBank/dash.mp3', 'MusicBank/Jump.mp3', 'MusicBank/roblox-death-sound-effect.mp3']
+        self.soundSFXList : list = ['Corentin/MusicBank/dash.mp3', 'Corentin/MusicBank/Jump.mp3', 'Corentin/MusicBank/roblox-death-sound-effect.mp3']
 
-        self.channel1 = pygame.mixer.Channel(0)
-        self.channel2 = pygame.mixer.Channel(1)
+        self.channel1 = pygame.mixer.Channel(1)
+        self.channel2 = pygame.mixer.Channel(2)
 
         self.isPlaying : bool = True
 
@@ -42,25 +43,16 @@ class Sound:
     def StopTheme(self, isPlaying):
         return isPlaying == False
     
-    def StartAnSFX(self, index, isPlaying):
-
-        fxPlay = self.soundSFXList[index]
-        print(self.soundSFXList[index])
-
-        pygame.mixer.music.load(fxPlay)
-        pygame.mixer.music.play()
-
-        while isPlaying:
-
-            if pygame.mixer.music.get_busy():
-                continue
-            else :
-                isPlaying == False
-      
-
-
 
     
+    def StartAnSFX(self, index):
+
+        sfxPlay = self.soundSFXList[index]
+        print(self.soundSFXList[index])
+
+        pygame.mixer.music.load(sfxPlay)
+        pygame.mixer.music.play()
+
 sound = Sound()
 
 sound.StartTheme(0)
@@ -74,7 +66,7 @@ while True:
 
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_d]:
-        sound.StartAnSFX(0, sound.isPlaying)
+        sound.StartAnSFX(1)
     
     sound.TryRelaunchTheme(0)
 
