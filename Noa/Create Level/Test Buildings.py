@@ -7,63 +7,43 @@ import csv
 import PropsFiles.coinsManager as coinsManager
 import PlatformsFiles.Building as Building
 
-SCREEN_WIDTH = 1920
-SCREEN_HEIGHT = 1080
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 800
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Mon Jeu de Plateforme")
+pygame.display.set_caption("GODSMITH ODYSSEY")
 
-# Couleurs
 WHITE = (255, 255, 255)
 BG_COLOR = (144, 201, 120)
 
-# Paramètres du jeu - Init grid 
+# Init grid 
 ROWS = 16
-TILE_SIZE = SCREEN_HEIGHT // ROWS # Assure-toi que cette valeur correspond à celle utilisée dans l'éditeur
+TILE_SIZE = SCREEN_HEIGHT // ROWS 
 TILE_TYPES = 12
 
-
-############# LEVEL IMPORT ###############
-
-#load images - BackGround Paralaxe - FUCK
-
-pine1_img = pygame.image.load('Ilan/asset/Background/pine1.png').convert_alpha()
-pine2_img = pygame.image.load('Ilan/asset/Background/pine2.png').convert_alpha()
-mountain_img = pygame.image.load('Ilan/asset/Background/mountain.png').convert_alpha()
-sky_img = pygame.image.load('Ilan/asset/Background/sky_cloud.png').convert_alpha()
+# BG
+sky_img = pygame.image.load('Noa/asset/img/background/0.png').convert_alpha() #sky
+house_img = pygame.image.load('Noa/asset/img/background/1.png').convert_alpha() #maison
+montaingn_img = pygame.image.load('Noa/asset/img/background/2.png').convert_alpha() #montagne
+void_img = pygame.image.load('Noa/asset/img/background/3.png').convert_alpha() #void
 
 def draw_bg(cam):
-    width = sky_img.get_width()
+    width = void_img.get_width()
     screen.fill((177,234,255))
     for x in range(4):
-        screen.blit(sky_img, ((x * width) - cam.pos_cam_x * 0.5, 0))
-        screen.blit(mountain_img, ((x * width) - cam.pos_cam_x * 0.6, SCREEN_HEIGHT - mountain_img.get_height() - 300))
-        screen.blit(pine1_img, ((x * width) - cam.pos_cam_x * 0.7, SCREEN_HEIGHT - pine1_img.get_height() - 150))
-        screen.blit(pine2_img, ((x * width) - cam.pos_cam_x * 0.8, SCREEN_HEIGHT - pine2_img.get_height()))
+        # void
+        screen.blit(void_img, ((x * width) - cam.pos_cam_x * 0.5, 0))
+        # montaign
+        screen.blit(montaingn_img, ((x * width) - cam.pos_cam_x * 0.6, SCREEN_HEIGHT - montaingn_img.get_height() - 20))
+        # sky
+        screen.blit(sky_img, ((x * width) - cam.pos_cam_x * 0.7, SCREEN_HEIGHT - sky_img.get_height()-150))
+        # house
+        screen.blit(house_img, ((x * width) - cam.pos_cam_x * 0.8, SCREEN_HEIGHT - house_img.get_height()-15))
 
 
 
-"""scroll = 0
-
-
-bg_images = []
-for i in range(1,4) :
-    bg_image = pygame.image.load(f"Noa/asset/img/Background/{i}.png").convert_alpha()
-    bg_images.append(bg_image)
-    
-bg_width = bg_images[0].get_width()
-
-def draw_bg() :
-    for x in range(3) :
-        speed = 1
-        for i in bg_images :
-            screen.blit(i,((x * bg_width) - scroll,0))
-            speed+= 0.2"""
-
-
-# Store textures in a list - List des Blocs 
-
+# Store textures in a list 
 textures : list[pygame.Surface] = []
 for x in range(TILE_TYPES):
 	img = pygame.image.load(f'PythonFiles/Assets/PNG/Blocs/{x}.png').convert_alpha()
@@ -75,15 +55,16 @@ def load_level(level_path):
     with open(level_path, 'r') as file: #recup csv level 
         return list(csv.reader(file))
 
-def create_platforms(level_data : list[list[str]] ) -> list[Platforms.Plateform]:  #Create Plateform par Bloc 
+def create_platforms(level_data : list[list[str]] ) -> list[Platforms.Plateform]:  #Create Plateform per Bloc 
     platforms : list[Platforms.Plateform]= []
     for y, row in enumerate(level_data):
         for x, tile_type in enumerate(row):
-            if tile_type != -1:  # -1 signifie pas de plateforme
+            if tile_type != -1:  # -1 no platform
                 platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE,None, textures[level_data[y][x]], False))
     return platforms
 
-# Charge le niveau
+
+# load level
 
 loading_level_data = load_level("Ilan/Levels/level_1.csv")
 
@@ -99,19 +80,12 @@ running : bool = True
 player  = Player.Player(300,200,50,50)
 ground  = pygame.Rect(0,400,500,100)
 
-
-
 allplateforms : list[Platforms.Plateform] = []
 
 P6 = Platforms.Plateform(0, SCREEN_HEIGHT - 20, 10000, 20, "red",None,True)
 P6.CreatePlateform(allplateforms)
 
-
-#backGround = pygame.image.load("PythonFiles/Assets/PNG/BackGround.png")
-
-
 allProps : list[Props.Props] = []
-
 
 square = Props.Props(True,False,20,150,50,50,True,1,0, False)
 allProps.append(square)
@@ -120,8 +94,6 @@ food = Props.Props(False,True,650,300,50,50,False,1,1, False)
 allProps.append(food)
 
 cam = Camera.Camera(SCREEN_WIDTH,SCREEN_HEIGHT,player.playerVelocity)
-
-
 
 allBuildings : list[Building.Buildings]= []
 
@@ -155,11 +127,9 @@ House6 = Building.Buildings(1150,300,5) ; House6.PlaceBuilding(allplateforms) ; 
 if House6.placeBarrer == True : 
     allFrontBuildings.append(House6) 
 
-
 House7 = Building.Buildings(1250,300,6) ; House7.PlaceBuilding(allplateforms) ; allBuildings.append(House7)
 if House7.placeBarrer == True : 
     allFrontBuildings.append(House7) 
-
 
 House8 = Building.Buildings(1450,300,7) ; House8.PlaceBuilding(allplateforms) ; allBuildings.append(House8)
 if House8.placeBarrer == True : 
@@ -197,24 +167,20 @@ House16 = Building.Buildings(2850,300,15) ; House16.PlaceBuilding(allplateforms)
 if House16.placeBarrer == True : 
     allFrontBuildings.append(House16) 
 
-
-
 while running: 
 
     draw_bg(cam)
-    
-    
     
     Pause = False
 
     dt : int = clock.tick(60)
     dt /= 1000
+    print(dt)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            # Autoriser le saut uniquement si le joueur n'est pas déjà en train de sauter
             if not player.isJumping:
                 player.isJumping = True
                 player.verticalVelocity = -player.jumpForce
@@ -228,7 +194,6 @@ while running:
 
     # left, right, top, bottom
     sides = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
 
     for i in allplateforms: 
 
@@ -249,8 +214,6 @@ while running:
         if side == 2:
             player.PlayerOnGround(i.Rect.top)
     
-
-
     for j in allProps : 
         j.onGround = False
         for i in allplateforms: 
@@ -275,13 +238,7 @@ while running:
         j.Collider(player, dt)
         j.CheckFalling(dt)
         
-
-
-
     # Affichage
-
-    #screen.blit(backGround, (0,0))
-
     
     for j in allProps :
 
@@ -307,13 +264,9 @@ while running:
                         coin.coin = 0
                 
             pygame.display.update()
-
-            
+       
         elif Pause == False:   
             j.DisplayProp(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-
-
-
 
     for i in allBuildings:
         i.DrawBuilding(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
@@ -325,11 +278,6 @@ while running:
 
     for i in allFrontBuildings:
         i.DrawBarrer(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
-
-
-
-    
-    #screen.blit( barrer, (50,80))
 
     # UI
 
@@ -343,5 +291,3 @@ while running:
     pygame.display.update()
 
 pygame.quit() 
-
-
