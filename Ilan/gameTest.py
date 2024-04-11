@@ -29,7 +29,6 @@ class Player(Sprite):
         super().__init__("Ilan/Assets/p1_front.png", startx, starty)
         self.stand_image = self.image
         self.jump_image = pygame.image.load("Ilan/Assets/p1_jump.png")
-
         self.walk_cycle = [pygame.image.load(f"Ilan/Assets/p1_walk{i:0>2}.png") for i in range(1,12)]
         self.animation_index = 0
         self.facing_left = False

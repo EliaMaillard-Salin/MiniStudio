@@ -60,7 +60,7 @@ player = Player.Player(50, SCREEN_HEIGHT - 130, 50, 50)  # Les valeurs initiales
 
 # Paramètres de la boucle de jeu
 clock = pygame.time.Clock()
-running = Trued
+running = True
 
 while running:
     for event in pygame.event.get():
