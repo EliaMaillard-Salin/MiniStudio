@@ -13,7 +13,7 @@ class Boss:
         self.width = w
         self.height = h
         self.size_img = [6*self.width,self.height*3]
-        self.pos_img = [self.x- self.size_img[0]/3, (self.size_img[1]/3)*10]
+        self.pos_img = [0,0]
 
         #Movement
         self.velocity = 1
@@ -51,6 +51,7 @@ class Boss:
         self.status_damage = True
         self.isJumping = False
         self.onGround = False
+        self.launch_aoe = True
 
         #Animations
         self.walk = ["Flo/Animations Athena/Athena Marche/Marche 1 sur 2.png", "Flo/Animations Athena/Athena Marche/Marche 2 sur 2.png"]
@@ -59,35 +60,57 @@ class Boss:
                             "Flo/Animations Athena/Athena Attaque Simple/Attaque 1 sur 2.png","Flo/Animations Athena/Athena Attaque Simple/Attaque 2 sur 2.png",
                             "Flo/Animations Athena/Athena Attaque Simple/Pose Fin.png"]
         self.attack_nb = 0
-        self.parry_anim = ["Flo/Animations Athena/Athena Contre/Pose Début.png","Flo/Animations Athena/Athena Contre/Garde.png",
-                           "Flo/Animations Athena/Athena Contre/Pose Fin.png"]
+        self.parry_anim = ["Flo/Animations Athena/Athena Contre/Garde.png"]
         self.parry_nb = 0
-        self.all_anim = [self.walk, self.attack_anim, self.parry_anim]
+        self.aoe_anim = ["Flo/Animations Athena/Anim Onde de Choc/Début Lancé.png","Flo/Animations Athena/Anim Onde de Choc/Lancé 1 sur 2.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Lancé 2 sur 2.png", "Flo/Animations Athena/Anim Onde de Choc/Onde de Choc.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Onde 1sur 5.png","Flo/Animations Athena/Anim Onde de Choc/Onde 2 sur 5.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Onde 3 sur 5.png","Flo/Animations Athena/Anim Onde de Choc/Onde 4 sur 5.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Onde 5 sur 5.png","Flo/Animations Athena/Anim Onde de Choc/Récup 1 sur 5.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Récup 2 sur 5.png","Flo/Animations Athena/Anim Onde de Choc/Récup 3 sur 5.png",
+                         "Flo/Animations Athena/Anim Onde de Choc/Recup 4 sur 5.png","Flo/Animations Athena/Anim Onde de Choc/Recup 5 sur 5.png",]
+        self.aoe_nb = 0
+        self.all_anim = [self.walk, self.attack_anim, self.parry_anim, self.aoe_anim]
 
     def load_anim(self):
         for elt in self.all_anim :
             for i in range(len(elt)) :
                 elt[i] = py.image.load(elt[i])
+                
+                
 
     def walking(self):
+        self.size_img = [self.walk[self.walk_nb].get_width()/10,self.walk[self.walk_nb].get_height()/9]
+        
         if self.x < player.posX :
             walk = py.transform.scale( self.walk[self.walk_nb] ,(self.size_img[0],self.size_img[1]) )
         else :
             walk =py.transform.flip (py.transform.scale( self.walk[self.walk_nb] ,(self.size_img[0],self.size_img[1])), True, False)
+        walk.set_colorkey((255,171,49))
         fen.blit(walk,(self.pos_img))
 
     def attacking(self):
+        self.size_img = [self.attack_anim[self.attack_nb].get_width()/10,self.attack_anim[self.attack_nb].get_height()/9]
         if self.x < player.posX :
             att = py.transform.scale( self.attack_anim[self.attack_nb] ,(self.size_img[0],self.size_img[1]) )
         else :
             att =py.transform.flip (py.transform.scale( self.attack_anim[self.attack_nb] ,(self.size_img[0],self.size_img[1])), True, False)
         fen.blit(att,(self.pos_img))
 
-    def parrying(self):
+    def attacking_aoe(self):
+        self.size_img = [self.aoe_anim[self.aoe_nb-1].get_width()/10,self.aoe_anim[self.aoe_nb-1].get_height()/9]
         if self.x < player.posX :
-            par = py.transform.scale( self.parry_anim[self.parry_nb] ,(self.size_img[0],self.size_img[1]) )
+            aoe = py.transform.scale( self.aoe_anim[self.aoe_nb-1] ,(self.size_img[0],self.size_img[1]) )
         else :
-            par =py.transform.flip (py.transform.scale( self.parry_anim[self.parry_nb] ,(self.size_img[0],self.size_img[1])), True, False)
+            aoe =py.transform.flip (py.transform.scale( self.aoe_anim[self.aoe_nb-1] ,(self.size_img[0],self.size_img[1])), True, False)
+        fen.blit(aoe,(self.pos_img))
+
+    def parrying(self):
+        self.size_img = [self.parry_anim[self.parry_nb-1].get_width()/10,self.parry_anim[self.parry_nb-1].get_height()/9]
+        if self.x < player.posX :
+            par = py.transform.scale( self.parry_anim[self.parry_nb-1] ,(self.size_img[0],self.size_img[1]) )
+        else :
+            par =py.transform.flip (py.transform.scale( self.parry_anim[self.parry_nb-1] ,(self.size_img[0],self.size_img[1])), True, False)
         fen.blit(par,(self.pos_img))
         
     def choose_goal(self):
@@ -168,18 +191,26 @@ class Boss:
         self.movement = False
         min_x = 0
         max_x = w_screen
-        if self.shockwave_l_x >= min_x or self.shockwave_r_x <= max_x :
+        if self.aoe_nb >= 0 and self.launch_aoe:
+            if self.aoe_nb < len(self.aoe_anim) :
+                self.aoe_nb += 1
+            else :
+                self.launch_aoe = False
+        if (self.shockwave_l_x >= min_x or self.shockwave_r_x <= max_x) and self.aoe_nb >= 3:
             self.shockwave_l_x -= self.w_shockwave
             self.shockwave_r_x += self.w_shockwave
-        else :
+        elif (self.shockwave_l_x <= min_x or self.shockwave_r_x >= max_x):
+            self.aoe_nb = 0
             self.status_aoe = False
             self.movement = True
+            self.launch_aoe = True
 
     def parry(self):
-        if self.parry_nb < len(self.parry_anim)- 1:
+        if self.parry_nb < len(self.parry_anim):
             self.parry_nb += 1
         else:
             self.parry_nb = 0
+            self.movement = True
 
     def BossOnGround(self, Y): 
         if (self.verticalVelocity > 0 ):
@@ -202,19 +233,16 @@ class Boss:
         if self.parry_nb == 0:
             action = randint(1,8)
             self.status_damage = True
-            if action > 0 :
-                print("ok")
+            if action > 8 :
                 self.parry()
                 self.movement = False
             else:
-                if randint(1,3) == 1 and self.onGround:
+                if randint(1,3) >0:
                     self.attack_aoe()
                 else : 
-                    print("ok2")
                     self.attack()
         else :
             self.parry()
-            self.movement = True
 
 
     
@@ -234,7 +262,6 @@ list_plateform = []
 ground = Plateform.Plateform(0,base_ground,w_screen,h_screen/10,(255,0,255))
 ground.CreatePlateform(list_plateform)
 menu = Menu.Menu(w_screen,h_screen)
-
 def update_screen (w,h):
     fen.fill((150,150,150))
     if w != fen.get_size()[0] :
@@ -262,7 +289,8 @@ def update_screen (w,h):
             athena.walking()
         if athena.status_attack:
             athena.attacking()
-            py.draw.rect(fen, (255,0,0), (athena.x_weapon,athena.y_weapon,athena.w_weapon,athena.h_weapon))#Weapon
+        if athena.status_aoe :
+            athena.attacking_aoe()
     else :
         py.draw.rect(fen, (255,255,0), (athena.x,athena.y,athena.width,athena.height))
         athena.parrying()
@@ -297,7 +325,7 @@ def adjust (w,h):
     athena.height = (h_screen//6)
     athena.y = base_ground-athena.height
     athena.size_img = [6*athena.width,athena.height*3]
-    athena.pos_img = [athena.x- athena.size_img[0]/3, (athena.size_img[1]/3)*10]
+    athena.pos_img = [athena.x- athena.size_img[0]/3, athena.size_img[1]]
     athena.x_weapon = athena.x + (athena.width/2)
     athena.y_weapon = athena.y + (athena.height/2)
     athena.shockwave_y = base_ground-athena.h_shockwave
@@ -319,12 +347,12 @@ while not menu.quit and end_game < 1500 :
                 else :
                     athena.walk_nb = 0
                 athena.time_walk = 0
-            athena.pos_img = [athena.x- athena.size_img[0]/5*2, athena.y - (athena.size_img[1]/21)*11]
+            athena.pos_img = [athena.x- athena.size_img[0]/3, athena.size_img[1]]
         if player.hp > 0:
             player.Movement()
         
         
-        if (athena.time_attack >= 2000 and player.hp > 0) or (athena.time_attack >= 600 and athena.parry_nb != 0) or (athena.status_aoe and athena.time_attack >= 10) or (athena.status_attack and athena.time_attack > 150) :
+        if (athena.time_attack >= 2000 and player.hp > 0) or (athena.time_attack >= 1000 and athena.parry_nb != 0) or (athena.status_aoe and ((athena.time_attack >= 200 and athena.launch_aoe) or (athena.time_attack >= 50 and athena.launch_aoe == False))) or (athena.status_attack and athena.time_attack > 150) :
             athena.pattern_boss()
             athena.time_attack = 0
             if athena.status_aoe :
@@ -351,7 +379,7 @@ while not menu.quit and end_game < 1500 :
                     w_screen, h_screen = event.w, event.h
                     py.display.set_mode((w_screen, h_screen),py.RESIZABLE)
                     adjust(w_screen,h_screen)
-                    
+              
     athena.time_attack += py.time.get_ticks() - start_t
     athena.time_walk += py.time.get_ticks() - start_t
     if player.hp == 0:
