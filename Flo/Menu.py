@@ -111,9 +111,6 @@ class Menu :
                 elif eventMenu.button == 1 and self.test_collide(self.y_quit) and self.option_status:
                     self.option_status = False
                 
-            elif eventMenu.type == py.VIDEORESIZE :
-                w, h = eventMenu.w, eventMenu.h
-                self.fen = py.display.set_mode((w, h),py.RESIZABLE)
         if py.mouse.get_pressed()[0] and self.movement_sound() and self.option_status:
             if py.mouse.get_pos()[0] < self.x_mouse :
                 if self.volume > 0:
