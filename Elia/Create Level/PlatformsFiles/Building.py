@@ -11,22 +11,22 @@ class Buildings :
 
 
         self.plateformsCoor : list[list[PlatformsClass.Plateform]] = [
-            [PlatformsClass.Plateform(self.posX + 20, self.posY,175,14,"green",None,False)],
-            [PlatformsClass.Plateform(self.posX + 20, self.posY,169,13,"green",None,False), PlatformsClass.Plateform(self.posX,self.posY + 123,195,10,"green",None,False)],
-            [PlatformsClass.Plateform(self.posX, self.posY + 107, 195, 8, "green",None,False), PlatformsClass.Plateform(self.posX + 20, self.posY,169,13,"green",None,False)],
-            [PlatformsClass.Plateform(self.posX, self.posY + 117, 195, 10, "green",None,False)],
-            [PlatformsClass.Plateform(self.posX, self.posY + 110, 215, 10, "green" ,None,False)],
-            [PlatformsClass.Plateform(self.posX, self.posY + 116, 215, 9, "green" ,None,False), PlatformsClass.Plateform(self.posX , self.posY + 211, 215, 9, "red",None,True)],
-            [PlatformsClass.Plateform(self.posX, self.posY + 116, 215, 9, "green" ,None,False), PlatformsClass.Plateform(self.posX , self.posY + 211, 215, 9, "red",None,True)],
-            [PlatformsClass.Plateform(self.posX + 9, self.posY + 123, 196, 11, "green",None,False)],
-            [PlatformsClass.Plateform(self.posX + 9, self.posY + 123, 196, 11, "green",None,False)],
-            [PlatformsClass.Plateform(self.posX + 24, self.posY  + 334, 209, 18, "green",None,False), PlatformsClass.Plateform(self.posX, self.posY + 525, 257, 15, "red",None,True)],
-            [PlatformsClass.Plateform(self.posX + 24, self.posY  + 334, 209, 18, "green",None,False), PlatformsClass.Plateform(self.posX, self.posY + 525, 257, 15, "red",None,True)],
+            [PlatformsClass.Plateform(self.posX + 20, self.posY,175,14,None,None,False)],
+            [PlatformsClass.Plateform(self.posX + 20, self.posY,169,13,None,None,False), PlatformsClass.Plateform(self.posX,self.posY + 123,195,10,None,None,False)],
+            [PlatformsClass.Plateform(self.posX, self.posY + 107, 195, 8, None,None,False), PlatformsClass.Plateform(self.posX + 20, self.posY,169,13,None,None,False)],
+            [PlatformsClass.Plateform(self.posX, self.posY + 117, 195, 10, None,None,False)],
+            [PlatformsClass.Plateform(self.posX, self.posY + 110, 215, 10, None ,None,False)],
+            [PlatformsClass.Plateform(self.posX, self.posY + 116, 215, 9, None ,None,False), PlatformsClass.Plateform(self.posX , self.posY + 211, 215, 9, None,None,True)],
+            [PlatformsClass.Plateform(self.posX, self.posY + 116, 215, 9, None ,None,False), PlatformsClass.Plateform(self.posX , self.posY + 211, 215, 9, None,None,True)],
+            [PlatformsClass.Plateform(self.posX + 9, self.posY + 123, 196, 11, None,None,False)],
+            [PlatformsClass.Plateform(self.posX + 9, self.posY + 123, 196, 11, None,None,False)],
+            [PlatformsClass.Plateform(self.posX + 24, self.posY  + 334, 209, 18, None,None,False), PlatformsClass.Plateform(self.posX, self.posY + 525, 257, 15, None,None,True)],
+            [PlatformsClass.Plateform(self.posX + 24, self.posY  + 334, 209, 18, None,None,False), PlatformsClass.Plateform(self.posX, self.posY + 525, 257, 15, None,None,True)],
             [],
             [],
             [],  
-            [PlatformsClass.Plateform(self.posX, self.posY, 155, 15, "green",None,False)],
-            [PlatformsClass.Plateform(self.posX + 15 ,  self.posY + 546, 1020, 154, "green",None,False)]
+            [PlatformsClass.Plateform(self.posX, self.posY, 155, 15, None,None,False)],
+            [PlatformsClass.Plateform(self.posX + 15 ,  self.posY + 546, 1020, 154, None,None,False)]
         ]
 
         self.allImages : list[pygame.Surface] = [

@@ -6,7 +6,8 @@ class Player:
 
         self.saveY : int  = 0
         self.onPause : bool = False
-        self.health : int = 5
+        self.maxHealth :int = 3
+        self.health : int = 3
         self.posX: int = posX
         self.posY : int = posY
         self.width : int = width 
@@ -15,7 +16,7 @@ class Player:
 
         #Player info 
         self.playerVelocity : int = 300
-        self.jumpForce : int = 600
+        self.jumpForce : int = 800
         self.gravity : int = 30
         self.verticalVelocity : int = 0
         self.playerDirection : int = 0
@@ -27,7 +28,7 @@ class Player:
         self.isAttacking :bool = False 
 
         #Dash infos 
-        self.dashVelocity : int = 1000
+        self.dashVelocity : int = 1300
         self.dashCoolDown : int = 0
         self.dashDirection : int = 1
 
@@ -41,16 +42,19 @@ class Player:
         self.weaponRect : pygame.rect.Rect = pygame.Rect((self.posX + ( self.playerRect.width / 2) ) - self.playerDirection*100, self.posY+(self.playerRect.height/4), 100, 30 )
 
         #img 
-        self.imgHeart :  pygame.Surface = pygame.transform.scale(pygame.image.load("Elia/Test/Asset/UI/coeurVie.png"), (50,50))
-        self.imgBrokenHeart :  pygame.Surface = pygame.transform.scale(pygame.image.load("Elia/Test/Asset/UI/CoeurMort.png"), (47,47))
-        self.listHP : list[ pygame.Surface] = [self.imgHeart,self.imgHeart,self.imgHeart,self.imgHeart,self.imgHeart]
+        self.imgHeart :  pygame.Surface = pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/ui/coeurVie.png"), (45,45))
+        self.imgBrokenHeart :  pygame.Surface = pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/ui/CoeurMort.png"), (40,40))
+
+        self.listHP : list[ pygame.Surface] = [self.imgHeart,self.imgHeart,self.imgHeart]
+        #self.listHP[-1] = pygame.transform.scale(self.listHP[-1], (50,50))
         self.dashState : int = 0
         self.dashStartCoolDown : int = 60
-        self.dashImages : list[ pygame.Surface] = [pygame.transform.scale( pygame.image.load("Elia/Test/Asset/UI/marteauDash.png"),  (174,104)  ), 
-                                                        pygame.transform.scale( pygame.image.load("Elia/Test/Asset/UI/marteauDash3.png"), (174,104)  ), 
-                                                        pygame.transform.scale( pygame.image.load("Elia/Test/Asset/UI/marteauDash2.png"), (174,104)  ), 
-                                                        pygame.transform.scale( pygame.image.load("Elia/Test/Asset/UI/marteauDash1.png"), (174,104)  ),
-                                                        pygame.transform.scale( pygame.image.load("Elia/Test/Asset/UI/marteauDash0.png"), (174,104)  ) ]
+        self.dashImages : list[ pygame.Surface] = [pygame.transform.scale( pygame.image.load("Elia/Create Level/Assets/PNG/ui/marteauDash.png"),  (140,82)  ), 
+                                                        pygame.transform.scale( pygame.image.load("Elia/Create Level/Assets/PNG/ui/marteauDash3.png"), (140,82)  ), 
+                                                        pygame.transform.scale( pygame.image.load("Elia/Create Level/Assets/PNG/ui/marteauDash2.png"), (140,82)  ), 
+                                                        pygame.transform.scale( pygame.image.load("Elia/Create Level/Assets/PNG/ui/marteauDash1.png"), (140,82)  ),
+                                                        pygame.transform.scale( pygame.image.load("Elia/Create Level/Assets/PNG/ui/marteauDash0.png"), (140,82)  ) ]
+        self.playerIcon : pygame.Surface = pygame.image.load("Elia/Create Level/Assets/PNG/ui/Tete Vie Andonis.png")
 
 
 
@@ -76,12 +80,13 @@ class Player:
         self.health += updateHP
         if self.health == 0: 
             self.isDead = True
-        if self.health > 5 :
-            self.health = 5 
+        if self.health > self.maxHealth :
+            self.health = self.maxHealth 
         for i in range(self.health): 
             self.listHP.append(self.imgHeart)
-        if len(self.listHP) < 5 : 
-            for i in range( self.health, 5):
+        #self.listHP[-1] = pygame.transform.scale(self.listHP[-1], (60,60))
+        if len(self.listHP) < self.maxHealth : 
+            for i in range( self.health, self.maxHealth):
                 self.listHP.append(self.imgBrokenHeart) 
 
 
