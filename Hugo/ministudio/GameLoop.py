@@ -3,6 +3,9 @@ import PlayerMovement as Player
 import PlatformsClass as Platforms
 import BotInfo as Bot
 
+walktime = 0
+hurt = 0
+attack = 0
 pygame.init()
 
 
@@ -15,7 +18,7 @@ running = True
 
 player = Player.Player(300,200,50,50)
 ground  = pygame.Rect(0,400,500,100)
-bot = Bot.Bot(530,540,40,40)
+bot = Bot.Bot(530,510,40,70)
 bot.load_anim()
 allPlateforms=[]
 
@@ -77,18 +80,56 @@ while running:
         i.Display(screen)
 
     bot.DisplayBot(screen)
-    bot.walking(screen)
-  
+    if bot.hurt == False or bot.attack == False:
+        bot.walking(screen)
+
+    if bot.hurt == True :
+        bot.Checkpoint1 = False
+        bot.Checkpoint2 = False
+        bot.BotHurt(screen)
+
+    if bot.attack == True:
+        bot.Checkpoint1 = False
+        bot.Checkpoint2 = False
+        bot.BotAttack(screen)
+        
     player.DisplayPlayer(screen)
     bot.DisplayCheckBot(screen)
 
     pygame.display.update()
     end = pygame.time.get_ticks() - start 
-    bot.botdesign_nb += 1
+    walktime += 1
+    hurt += 1
+    attack += 1
+    if attack == 4 :
+        bot.botAttack_nb += 1
+        attack = 0
+
+    if bot.botAttack_nb == 23:
+        bot.botAttack_nb = 0
+        bot.attack = False
+        if bot.BotDirection == -1 :
+            bot.Checkpoint1 = True
+        elif bot.BotDirection == 1:
+            bot.Checkpoint2 = True
+
+    if hurt == 4:
+        bot.bothurt_nb += 1
+        hurt = 0
+    if walktime == 10:
+        bot.botdesign_nb += 1
+        walktime = 0
+    if bot.bothurt_nb == 19:
+        bot.bothurt_nb = 0
+        bot.hurt = False
+        if bot.BotDirection == -1 :
+            bot.Checkpoint1 = True
+        elif bot.BotDirection == 1:
+            bot.Checkpoint2 = True
     if bot.botdesign_nb == 5 :
         bot.botdesign_nb = 0
     print(end)
-    clock.tick(60)
+    clock.tick(120)
 pygame.quit() 
 
 
