@@ -26,7 +26,7 @@ class Buildings :
             [],
             [],  
             [PlatformsClass.Plateform(self.posX, self.posY, 155, 15, None,None,False)],
-            [PlatformsClass.Plateform(self.posX + 15 ,  self.posY + 546, 1020, 154, None,None,False)]
+            [PlatformsClass.Plateform(self.posX + 15 ,  self.posY + 546, 1020, 30, None,None,False)]
         ]
 
         self.allImages : list[pygame.Surface] = [
@@ -42,7 +42,7 @@ class Buildings :
             pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maison Tour 2 étages/Maison_Tour_final.png"),
             pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maison Tour 2 étages/Maison_Tour_Rouge.png"),
             pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maisons arriere plan/hutteGrande copie 2.png"),
-            pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maisons arriere plan/Maison_Tour copie.png"),
+            pygame.transform.scale(pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maisons arriere plan/Maison_Tour copie.png"), (166,400)),
             pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Maisons arriere plan/maisonCarreGrande copie 2.png"), 
             pygame.transform.scale(pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Pillier/Pillier.png"),(155,400)), 
             pygame.transform.scale(pygame.image.load("PythonFiles/Assets/PNG/Asset Batiment/Temple/Temple_final.png"), (1050,700)),

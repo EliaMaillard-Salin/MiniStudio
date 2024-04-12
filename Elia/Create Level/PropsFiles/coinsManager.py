@@ -8,9 +8,9 @@ class coins :
         
         
 
-        self.explainLst = [py.transform.scale(py.image.load("Noa/asset/img/coinsANDexplain/Acropole.png"), (1920,1080)),
-        py.transform.scale(py.image.load("Noa/asset/img/coinsANDexplain/Dionysos.png"), (1920,1080)),
-        py.transform.scale(py.image.load("Noa/asset/img/coinsANDexplain/Olympieon.png"), (1920,1080))]
+        self.explainLst = [py.transform.scale(py.image.load("Elia/Create Level/Assets/PNG/Coins/Acropole.png"), (1920,1080)),
+        py.transform.scale(py.image.load("Elia/Create Level/Assets/PNG/Coins/DIONYSOS.png"), (1920,1080)),
+        py.transform.scale(py.image.load("Elia/Create Level/Assets/PNG/Coins/olympiéon.png"), (1920,1080))]
         
         
     def show(self, fen) :
