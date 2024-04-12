@@ -58,7 +58,6 @@ pillar1 = Plateform(1685,335,215,13,(255,0,255), None, False)
 pillar1.CreatePlateform(list_plateform)
 
 
-font : py.font.Font = py.font.Font('GodSmith Odyssey/Project/Assets/Fonts/Unbounded-Regular.ttf', 30)
 
 imgAthena = py.image.load("GodSmith Odyssey/Project/Assets/PNG/ui/Tete Vie Athéna.png")
 
@@ -217,13 +216,9 @@ while not menu.quit :
         fen.blit(i, ( 305  + (count*60), 70))
         count +=1
     fen.blit(player.dashImages[player.dashState], ( 150,50 ))
-    currentFPS = int(1000/(dt*1000))
-    displayFPS : py.Surface = py.transform.scale(font.render(str(currentFPS), True, (0,0,0)), (35,30) )
-    fen.blit(displayFPS, (25,150))
-
 
     fen.blit(imgAthena, (w_screen//2, 35))
-    
+
 
     
     py.display.flip()
@@ -272,10 +267,13 @@ while not menu.quit :
 
     if menu.status_pause == False:
         for event in py.event.get():
+            if event.type == py.MOUSEBUTTONDOWN and event.button == 1 :
+                player.Attack() 
             if event.type == py.KEYDOWN :
                 if event.key == py.K_p :
                     menu.status_pause = True
                 elif event.key == py.K_SPACE :
+                    player.playjump = True
                     if not player.isJumping:
                         player.isJumping = True
                         player.verticalVelocity = -player.jumpForce
