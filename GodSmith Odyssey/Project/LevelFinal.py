@@ -6,10 +6,9 @@ import PropsFiles.Props as Props
 import csv
 import PropsFiles.coinsManager as coinsManager
 import PlatformsFiles.Building as Building
-import time
 import IA.Mobs.BotInfo as Bots
 from Athena import Menu
-from SFX.SFX import Sound
+
 
 
 walktime = 0
@@ -87,7 +86,7 @@ clock = pygame.time.Clock()
 running : bool = True
 
 player  = Player.Player(50,250,50,50)
-player.load_anim_player()
+
 ground  = pygame.Rect(0,400,500,100)
 
 
@@ -196,7 +195,7 @@ def ImportProps():
 
 ImportProps()
 
-
+player.load_anim_player()
 Mob1 = Bots.Bot(3400,500,80,140, [3220,500], [3700,500]) ;  Mob1.load_anim_bot() ; allMobs.append(Mob1)
 Mob2 = Bots.Bot(5400,200,80,140, [4900,200],[6220,200]);  Mob2.load_anim_bot() ;  allMobs.append(Mob2)
 Mob3 = Bots.Bot(5850,200,80,140, [4900,200],[6220,200]); Mob3.load_anim_bot() ;  allMobs.append(Mob3)
@@ -204,27 +203,19 @@ Mob3 = Bots.Bot(5850,200,80,140, [4900,200],[6220,200]); Mob3.load_anim_bot() ; 
 StartAthena = False
 
 
-menu = Menu.Menu(SCREEN_WIDTH,SCREEN_HEIGHT)
 
 
-sfx = Sound()
-sfx.StartTheme(0)
-
-
-while not menu.quit: 
+running = True
+while running: 
 
  
 
-    Sound.TryRelaunchTheme(0)
 
     Pause = False
     dt = clock.tick(60)
     dt/=1000
 
 
-    if menu.status_pause :
-        screen.blit(backGround, (0,0)) 
-        menu.pause(SCREEN_WIDTH,SCREEN_HEIGHT,screen)
 
 
     if player.immortality == True and pygame.time.get_ticks() - player.startImmortality >= 1000: 
@@ -234,9 +225,7 @@ while not menu.quit:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN :
-            if event.key == pygame.K_p :
-                menu.status_pause = True
-            elif event.key == pygame.K_SPACE:
+            if event.key == pygame.K_SPACE:
                 player.playjump = True
                 # Autoriser le saut uniquement si le joueur n'est pas déjà en train de sauter
                 if not player.isJumping:
@@ -244,8 +233,7 @@ while not menu.quit:
                     player.verticalVelocity = -player.jumpForce
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
             player.Attack() 
-
-    if menu.status_pause == False :    
+ 
         if stop != 1:
             for i in allMobs:
                 i.CollisionBot(player)
@@ -564,5 +552,5 @@ while not menu.quit:
        
     pygame.display.update()
 
-sfx.StopTheme(0)
+
 pygame.quit()

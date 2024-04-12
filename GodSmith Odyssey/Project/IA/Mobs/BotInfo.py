@@ -137,14 +137,14 @@ class Bot:
 
     def CheckCollision(self):
         # Vérifier la collision avec le checkpoint 1 pour bot
-        check_rect = pygame.Rect(self.Check[0],self.Check[1],self.Check[2],self.Check[3])
-        if self.BotRect.colliderect(check_rect):
+
+        if self.posX <= self.Check[0]:
             self.Checkpoint1 = False
             self.Checkpoint2 = True
                 
         # Vérifier la collision avec le checkpoint 1 pour bot        
-        check_rect = pygame.Rect(self.Check1[0],self.Check1[1],self.Check1[2],self.Check1[3])
-        if self.BotRect.colliderect(check_rect):
+
+        if self.posX >= self.Check1[0]:
             self.Checkpoint2 = False
             self.Checkpoint1 = True
 
