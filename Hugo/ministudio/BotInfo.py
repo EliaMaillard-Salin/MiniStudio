@@ -18,6 +18,8 @@ class Bot:
         self.hp = 1
         self.invicible = 0
         self.PlayerIncivible = False
+        self.hurt = False
+        self.attack = False
 
         # Bot Checkpoint Info
         self.Check = [(50,550,20,20)]
@@ -28,24 +30,60 @@ class Bot:
         # Rects for display 
         self.BotRect = pygame.Rect(self.posX,self.posY,self.Width,self.Height)
 
-        self.botdesign = ['Hugo/ministudio/img/bot/Déplacement0001.png','Hugo/ministudio/img/bot/Déplacement0002.png','Hugo/ministudio/img/bot/Déplacement0003.png','Hugo/ministudio/img/bot/Déplacement0004.png','Hugo/ministudio/img/bot/Déplacement0005.png']
+        self.botdesign = ['Hugo/ministudio/img/bot/mov/Déplacement0001.png','Hugo/ministudio/img/bot/mov/Déplacement0002.png','Hugo/ministudio/img/bot/mov/Déplacement0003.png','Hugo/ministudio/img/bot/mov/Déplacement0004.png','Hugo/ministudio/img/bot/mov/Déplacement0005.png']
         self.botdesign_nb = 0
-        self.all_anim : list[list[str]] = [self.botdesign]
 
-        self.imganim : list[list[pygame.Surface]]= [[]]
+        self.bothurt = ['Hugo/ministudio/img/bot/Degats/Mort0001.png','Hugo/ministudio/img/bot/Degats/Mort0002.png','Hugo/ministudio/img/bot/Degats/Mort0003.png','Hugo/ministudio/img/bot/Degats/Mort0004.png','Hugo/ministudio/img/bot/Degats/Mort0005.png','Hugo/ministudio/img/bot/Degats/Mort0006.png','Hugo/ministudio/img/bot/Degats/Mort0007.png',
+                        'Hugo/ministudio/img/bot/Degats/Mort0008.png','Hugo/ministudio/img/bot/Degats/Mort0009.png','Hugo/ministudio/img/bot/Degats/Mort0010.png','Hugo/ministudio/img/bot/Degats/Mort0011.png','Hugo/ministudio/img/bot/Degats/Mort0012.png','Hugo/ministudio/img/bot/Degats/Mort0013.png','Hugo/ministudio/img/bot/Degats/Mort0014.png',
+                        'Hugo/ministudio/img/bot/Degats/Mort0015.png','Hugo/ministudio/img/bot/Degats/Mort0016.png','Hugo/ministudio/img/bot/Degats/Mort0017.png','Hugo/ministudio/img/bot/Degats/Mort0018.png','Hugo/ministudio/img/bot/Degats/Mort0019.png']
+        self.bothurt_nb = 0
+
+        self.botAttack = ['Hugo/ministudio/img/bot/Attack/Attaque0001.png','Hugo/ministudio/img/bot/Attack/Attaque0002.png','Hugo/ministudio/img/bot/Attack/Attaque0003.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0006.png','Hugo/ministudio/img/bot/Attack/Attaque0007.png','Hugo/ministudio/img/bot/Attack/Attaque0008.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0009.png','Hugo/ministudio/img/bot/Attack/Attaque0010.png','Hugo/ministudio/img/bot/Attack/Attaque0011.png','Hugo/ministudio/img/bot/Attack/Attaque0012.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0013.png','Hugo/ministudio/img/bot/Attack/Attaque0014.png','Hugo/ministudio/img/bot/Attack/Attaque0015.png','Hugo/ministudio/img/bot/Attack/Attaque0016.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0017.png','Hugo/ministudio/img/bot/Attack/Attaque0018.png','Hugo/ministudio/img/bot/Attack/Attaque0019.png','Hugo/ministudio/img/bot/Attack/Attaque0020.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0021.png','Hugo/ministudio/img/bot/Attack/Attaque0022.png','Hugo/ministudio/img/bot/Attack/Attaque0023.png','Hugo/ministudio/img/bot/Attack/Attaque0024.png',
+                          'Hugo/ministudio/img/bot/Attack/Attaque0025.png']
+        self.botAttack_nb = 0
+        self.all_anim : list[list[str]] = [self.botdesign,self.bothurt,self.botAttack]
+
+        self.imganim : list[list[pygame.Surface]]= []
 
     def load_anim(self):
-        count = 0
         for elt in self.all_anim:
+            newAmin : list[pygame.Surface] = []
             for i in range(len(elt)):
-                self.imganim[count].append(pygame.image.load(elt[i]))
-            count += 1
+                newAmin.append(pygame.image.load(elt[i]))
+            self.imganim.append(newAmin)
 
 
 
     def walking(self, fen):
-        walk = pygame.transform.scale(self.imganim[0][self.botdesign_nb],(self.Width,self.Height))
-        fen.blit(walk,(self.posX,self.posY))
+        if self.BotDirection == -1:
+            walk = pygame.transform.flip(pygame.transform.scale(self.imganim[0][self.botdesign_nb],(self.Width + 180,self.Height + 40)), True,False)
+            fen.blit(walk,(self.posX - 95,self.posY - 25))
+        elif self.BotDirection == 1:
+            walk = pygame.transform.scale(self.imganim[0][self.botdesign_nb],(self.Width + 180,self.Height + 40))
+            fen.blit(walk,(self.posX - 85,self.posY - 25))
+
+    def BotHurt(self, fen):
+        if self.BotDirection == -1:
+            walk = pygame.transform.flip(pygame.transform.scale(self.imganim[1][self.bothurt_nb],(self.Width + 30,self.Height + 35)), True,False)
+            fen.blit(walk,(self.posX - 15,self.posY - 25))
+        elif self.BotDirection == 1:
+            walk = pygame.transform.scale(self.imganim[1][self.bothurt_nb],(self.Width + 30,self.Height + 35))
+            fen.blit(walk,(self.posX - 15,self.posY - 25))
+    
+    def BotAttack(self,fen):
+        if self.BotDirection == -1:
+            walk = pygame.transform.flip(pygame.transform.scale(self.imganim[2][self.botAttack_nb],(self.Width + 30,self.Height + 35)), True,False)
+            fen.blit(walk,(self.posX - 15,self.posY - 25))
+        elif self.BotDirection == 1:
+            walk = pygame.transform.scale(self.imganim[2][self.botAttack_nb],(self.Width + 30,self.Height + 35))
+            fen.blit(walk,(self.posX - 15,self.posY - 25))
+
+
 
     def MovementBot(self):
 
@@ -107,7 +145,9 @@ class Bot:
                 player.verticalVelocity = -player.jumpForce
             else:
                 player.verticalVelocity = -player.jumpForce
+                self.hurt = True
                 self.hp -= 1
+
         if ColWeapon == 1 or ColWeapon == 4 or (self.BotDirection == -1 and col == 4 and player.isDashing == True) or (self.BotDirection == 1 and col == 1 and player.isDashing == True):
             if self.hp == 0:
                 self.Checkpoint1 = False
@@ -118,20 +158,26 @@ class Bot:
                 self.posY = -11111
             else :
                 self.hp -= 1
+                self.bothurt = True
+
         if (col != 0 and col != 2 and player.isDashing == False) or (col == 1 and player.isDashing == True and self.BotDirection == -1 ) or (col == 4 and player.isDashing == True and self.BotDirection == 1):
             if player.hp == 0:
                 player.height = 0
                 player.width = 0 
                 player.posX = -11111
                 player.posY = -11111
+                self.attack = True
             else:
                 player.hp -= 1
+                self.attack = True
                 self.invicible = 30 
                 self.PlayerIncivible = True
                 if self.BotDirection == 1:
-                    player.posX -= self.BotDirection * player.dashVelocity
+                    player.posX -= -player.playerDirection * player.dashVelocity
+                    player.posY = 0
                 elif self.BotDirection == -1:
-                    player.posX += self.BotDirection * player.dashVelocity
+                    player.posX += -player.playerDirection * player.dashVelocity
+                    player.posY = 0
 
         if self.PlayerIncivible:          
             self.invicible -= 1
