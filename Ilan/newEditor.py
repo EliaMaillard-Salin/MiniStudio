@@ -1,3 +1,4 @@
+import os
 import pygame
 import button
 import csv
@@ -18,7 +19,6 @@ pygame.display.set_caption('Level Editor')
 ROWS = 16
 MAX_COLS = 150
 TILE_SIZE = SCREEN_HEIGHT // ROWS
-TILE_TYPES = 12
 level = 0
 current_tile = 0
 scroll_left = False
@@ -36,20 +36,11 @@ sky_img = pygame.image.load('Ilan/asset/Background/sky_cloud.png').convert_alpha
 GREEN = (144, 201, 120)
 WHITE = (255, 255, 255)
 GREY = (50, 50, 50)
+RED = (200, 25, 25)
 
-# Store tiles in a list
-img_list = []
-for x in range(TILE_TYPES):
-	img = pygame.image.load(f'Ilan/asset/Blocs/{x}.png').convert_alpha()
-	img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
-	img_list.append(img)
-
+# Load images
 save_img = pygame.image.load('Ilan/asset/save_btn.png').convert_alpha()
 load_img = pygame.image.load('Ilan/asset/load_btn.png').convert_alpha()
-
-GREEN = (144, 201, 120)
-WHITE = (255, 255, 255)
-RED = (200, 25, 25)
 
 font = pygame.font.SysFont('Futura', 30)
 
@@ -68,6 +59,59 @@ def draw_bg():
 		screen.blit(pine1_img, ((x * width) - scroll * 0.7, SCREEN_HEIGHT - pine1_img.get_height() - 150))
 		screen.blit(pine2_img, ((x * width) - scroll * 0.8, SCREEN_HEIGHT - pine2_img.get_height()))
 
+############################################################################################################################
+def folder_list():
+	list = []
+	for folder in os.listdir('Ilan/asset'):
+		if os.path.isdir(os.path.join('Ilan/asset', folder)):
+			list.append(folder)
+
+	return list
+
+def draw_folder_list(folder_list):
+	button_col = 0
+	button_row = 0
+	for folder in folder_list:
+		draw_text(folder, font, WHITE, SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 20)
+		button_col += 1
+		if button_col == 3:
+			button_row += 1
+			button_col = 0
+
+def button_list(folderName):
+	button_list = []
+	button_col = 0
+	button_row = 0
+
+	folder_path = os.path.join('Ilan/asset', folderName)
+	img_files = [name for name in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, name))]
+	for i in range(len(img_files)):
+		img = pygame.image.load(os.path.join(folder_path, img_files[i])).convert_alpha()
+		img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+		tile_button = button.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img, 1)
+		button_list.append(tile_button)
+		button_col += 1
+		if button_col == 3:
+			button_row += 1
+			button_col = 0
+
+	return button_list
+
+def draw_button_list(button_list):
+	for button in button_list:
+		button.draw(screen)
+
+def img_list(folderName):
+	img_list = []
+	folder_path = os.path.join('Ilan/asset', folderName)
+	img_files = [name for name in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, name))]
+	for i in range(len(img_files)):
+		img = pygame.image.load(os.path.join(folder_path, img_files[i])).convert_alpha()
+		img = pygame.transform.scale(img, (TILE_SIZE, TILE_SIZE))
+		img_list.append(img)
+
+	return img_list
+############################################################################################################################
 
 #function for outputting text onto the screen
 def draw_text(text, font, text_col, x, y):
@@ -78,7 +122,7 @@ def draw_text(text, font, text_col, x, y):
 for tile in range(0, MAX_COLS):
 	world_data[ROWS - 1][tile] = 3
  
- #draw grid
+#draw grid
 def draw_grid():
 	#vertical lines
 	for c in range(MAX_COLS + 1):
@@ -89,7 +133,7 @@ def draw_grid():
 
 
 #function for drawing the world tiles
-def draw_world():
+def draw_world(img_list):
 	for y, row in enumerate(world_data):
 		for x, tile in enumerate(row):
 			if tile >= 0:
@@ -98,18 +142,12 @@ def draw_world():
 #create buttons
 save_button = button.Button(SCREEN_WIDTH // 2, SCREEN_HEIGHT + LOWER_MARGIN - 50, save_img, 1)
 load_button = button.Button(SCREEN_WIDTH // 2 + 200, SCREEN_HEIGHT + LOWER_MARGIN - 50, load_img, 1)
-#make a button list
-button_list = []
-button_col = 0
-button_row = 0
-for i in range(len(img_list)):
-	tile_button = button.Button(SCREEN_WIDTH + (75 * button_col) + 50, 75 * button_row + 50, img_list[i], 1)
-	button_list.append(tile_button)
-	button_col += 1
-	if button_col == 3:
-		button_row += 1
-		button_col = 0    
-  
+
+current_folder = 'Blocs'
+lButton = button_list(current_folder)
+draw_button_list(lButton)
+lImg = img_list(current_folder)
+
 run = True
 while run:
 
@@ -117,11 +155,14 @@ while run:
 
 	draw_bg()
 	draw_grid()
-	draw_world()
+	draw_world(lImg)
+	draw_folder_list(folder_list())
+	#draw tile panel and tiles
+	pygame.draw.rect(screen, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
 
 	draw_text(f'Level: {level}', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 90)
 	draw_text('Press UP or DOWN to change level', font, WHITE, 10, SCREEN_HEIGHT + LOWER_MARGIN - 60)
-
+ 
 	#save and load data
 	if save_button.draw(screen):
 		#save level data
@@ -138,26 +179,21 @@ while run:
 				for y, tile in enumerate(row):
 					world_data[x][y] = int(tile)
 			print(f'Level {level} loaded')
-		
-	#draw tile panel and tiles
-	pygame.draw.rect(screen, GREEN, (SCREEN_WIDTH, 0, SIDE_MARGIN, SCREEN_HEIGHT))
 
 	#choose a tile
 	button_count = 0
-	for button_count, i in enumerate(button_list):
+	for button_count, i in enumerate(lButton):
 		if i.draw(screen):
 			current_tile = button_count
 
 	#highlight the selected tile
-	pygame.draw.rect(screen, RED, button_list[current_tile].rect, 3)
+	pygame.draw.rect(screen, RED, lButton[current_tile].rect, 3)
 
 	#scroll the map
 	if scroll_left == True and scroll > 0:
 		scroll -= 5 * scroll_speed
 	if scroll_right == True and scroll < (MAX_COLS * TILE_SIZE) - SCREEN_WIDTH:
 		scroll += 5 * scroll_speed
-
-	#add new tiles to the screen
 
 	#get mouse position
 	pos = pygame.mouse.get_pos()
