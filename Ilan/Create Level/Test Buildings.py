@@ -70,7 +70,7 @@ clock = pygame.time.Clock()
 
 running : bool = True
 
-player  = Player.Player(300,200,50,50)
+player  = Player.Player(300,200,54,93)
 ground  = pygame.Rect(0,400,500,100)
 
 
