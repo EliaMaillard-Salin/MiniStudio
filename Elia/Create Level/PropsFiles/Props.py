@@ -5,7 +5,10 @@ import pygame
 class Props: 
     def __init__(self, hasCollide : bool , isFood : bool , posX : int, posY : int, width : int, height : int, hasGravity :bool, weight : int, indxImg :bool, isCoin : bool ):
         
-        
+
+        self.spawnX = posX
+        self.spawnY = posY
+        self.index : int = indxImg
         self.isCoin : bool= isCoin
         self.coinReveal : bool = False
         self.hasCollide : bool = hasCollide
@@ -17,16 +20,28 @@ class Props:
         self.hasGravity : bool = hasGravity
         self.onGround : bool = False
         self.Rect : pygame.rect.Rect = pygame.Rect(self.posX, self.posY, self.width, self.height)
-        self.propsImg  : list[pygame.Surface] =   [pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol.png"), (60,55)), 
-                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/bol de tentacules.png"), (85,60)),
-                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/fasolada.png"),  (60,55)),
-                                                        pygame.transform.scale(pygame.image.load("Elia/Test/Asset/Props/moussaka.png"),  (60,55) ),
-                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/Agora.png"), (50,50)),
-                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/coinDionysos.png"), (50,50)),
-                                                        pygame.transform.scale(pygame.image.load("Noa/asset/img/coinsANDexplain/coin_Temple_de_Zeus.png"), (50,50))
+        self.propsImg  : list[pygame.Surface] =   [pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/nourriture/bol.png"), (60,55)), 
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/nourriture/bol de tentacules.png"), (84,60)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/nourriture/fasolada.png"),  (60,55)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/nourriture/moussaka.png"), (60,55)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/Coins/Pièce Agora.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/Coins/Pièce Dionysos.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/Coins/Pièce Temple de Zeus.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/arbre.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/arbre2.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/box.png"), (70,70)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/linge.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/lys.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/nuage1.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/nuage2.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/Statut_Athena.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/Statut_Chouette.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/vaseMotofs.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/vaseSansMotifs.png"), (50,50)),
+                                                        pygame.transform.scale(pygame.image.load("Elia/Create Level/Assets/PNG/props/vaseSansMotifsFleurs.png"), (50,50)),
                                                     ]  
         
-        self.img : pygame.Surface = self.propsImg[indxImg]
+        self.img : pygame.Surface = self.propsImg[self.index]
         
         self.dashVelocity : int = 0
         self.weight :int = weight        
@@ -93,11 +108,11 @@ class Props:
                     
                     if (player.posX + player.width >= self.posX) and (player.posX < self.posX): 
                         self.posX +=  ( player.playerVelocity / self.weight + self.dashVelocity ) * dt
-                        player.posX -= self.weight * dt
+                        player.posX = self.posX - player.width - 1
 
                     if (player.posX <= (self.posX + self.width)) and ((player.posX + player.width) > self.posX+self.width): 
                         self.posX -=  ( (player.playerVelocity / self.weight) + self.dashVelocity ) * dt
-                        player.posX += self.weight * dt
+                        player.posX = self.posX +self.width + 1
 
             
         if self.isFood : 

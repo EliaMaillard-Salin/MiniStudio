@@ -47,8 +47,8 @@ for x in range(TILE_TYPES):
 
 save_img : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/SAVE.png').convert_alpha()
 load_img : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/LOAD.png').convert_alpha()
-save_imgOver : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/SAVE1.png')
-load_imgOver : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/LAOD1.png')
+save_imgOver : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/SAVE1.png').convert_alpha()
+load_imgOver : pygame.Surface = pygame.image.load('PythonFiles/Assets/PNG/Boutons/LAOD1.png').convert_alpha()
 
 GREEN = (144, 201, 120)
 WHITE = (255, 255, 255)
@@ -138,7 +138,7 @@ while run:
 
 	if load_button.draw(screen, True ):
 		scroll = 0
-		with open(f'PythonFiles/Levels/level{level}_data.csv') as csvfile:
+		with open(f'Elia/Create Level/Levels/level{level}_data.csv') as csvfile:
 			reader = csv.reader(csvfile, delimiter = ',')
 			for x, row in enumerate(reader):
 				for y, tile in enumerate(row):

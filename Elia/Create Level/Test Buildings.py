@@ -54,7 +54,7 @@ def create_platforms(level_data : list[list[str]] ) -> list[Platforms.Plateform]
     for y, row in enumerate(level_data):
         for x, tile_type in enumerate(row):
             if tile_type != -1:  # -1 signifie pas de plateforme
-                platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE,None, textures[level_data[y][x]], False))
+                platforms.append(Platforms.Plateform(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE,None, textures[level_data[y][x]], True))
     return platforms
 
 # Charge le niveau
@@ -284,7 +284,6 @@ while running:
 
 
 
-
     for i in allBuildings:
         i.DrawBuilding(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
     
@@ -298,17 +297,16 @@ while running:
 
 
 
-    
-    #screen.blit( barrer, (50,80))
 
     # UI
 
-    count = 0
+    screen.blit(player.playerIcon, (15,35))
 
+    count = 0
     for i in player.listHP: 
-        screen.blit(i, (SCREEN_WIDTH - 70 - (count*60), 20))
+        screen.blit(i, ( 305  + (count*60), 70))
         count +=1
-    screen.blit(player.dashImages[player.dashState], (SCREEN_WIDTH - 240 , 100 ))
+    screen.blit(player.dashImages[player.dashState], ( 150,50 ))
     
     pygame.display.update()
 
