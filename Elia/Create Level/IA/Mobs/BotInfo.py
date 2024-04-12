@@ -178,6 +178,7 @@ class Bot:
 
         if (self.col != 0 and self.col != 2 and player.isDashing == False) or (self.col == 1 and player.isDashing == True and self.BotDirection == -1 ) or (self.col == 4 and player.isDashing == True and self.BotDirection == 1):
             player.LooseOrWinHP(-1)
+            player.getHit = True
             if player.health == 0 : 
                 self.attack = True
                 self.PlayerDeath = True
