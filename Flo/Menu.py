@@ -56,7 +56,6 @@ class Menu :
             newrestart = py.transform.scale(self.img_restart1,(self.size_button[0],self.size_button[1]))
         else :
             newrestart = py.transform.scale(self.img_restart,(self.size_button[0],self.size_button[1]))
-        py.draw.rect(fen, (255,0,0),(self.x_button,self.y_restart,self.size_button[0],self.size_button[1]))
         fen.blit(newrestart,(self.x_button,self.y_restart))
 
     def button_option(self,fen) :
@@ -65,7 +64,6 @@ class Menu :
             newoption = py.transform.scale(self.img_option1,(self.size_button[0],self.size_button[1]))
         else :
             newoption = py.transform.scale(self.img_option,(self.size_button[0],self.size_button[1]))
-        py.draw.rect(fen, (255,0,0),(self.x_button,self.y_option,self.size_button[0],self.size_button[1]))
         fen.blit(newoption,(self.x_button,self.y_option))
     
     def button_quit(self,fen) :
@@ -74,8 +72,6 @@ class Menu :
             newquit = py.transform.scale(self.img_quit1,(self.size_button[0],self.size_button[1]))
         else :
             newquit = py.transform.scale(self.img_quit,(self.size_button[0],self.size_button[1]))
-        
-        py.draw.rect(fen, (255,0,0),(self.x_button,self.y_quit,self.size_button[0],self.size_button[1]))
         fen.blit(newquit,(self.x_button,self.y_quit))
 
     def movement_sound(self):
@@ -88,7 +84,7 @@ class Menu :
         self.x_square_sound = self.x + self.size[0]/9+self.pos_on_sound
         self.y_square_sound = self.y + self.size[1]/7*2
         py.draw.rect(fen, (255,0,0),(self.x_square_sound,self.y_square_sound,self.size_square[0],self.size_square[1]))
-        py.draw.rect(fen, (255,0,0),(self.x_square_sound-self.pos_on_sound,self.y_square_sound+(self.size_square[1]//3),self.width_sound+(self.size_square[0]//2),self.size_square[1]//3))
+        py.draw.rect(fen, (255,0,0),(self.x_square_sound-self.pos_on_sound,self.y_square_sound+(self.size_square[1]//3),self.width_sound,self.size_square[1]//3))
 
     def menu_pause(self,fen):
         if not self.option_status :

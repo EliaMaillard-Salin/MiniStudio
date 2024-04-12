@@ -11,6 +11,8 @@ class Boss:
         self.height = h
         self.size_img = [0,0]
         self.pos_img = [0,0]
+        self.size_onde = [0,0]
+        self.pos_onde = [0,0]
 
         #Movement
         self.velocity = 1
@@ -25,7 +27,7 @@ class Boss:
         self.y_weapon = self.y + (self.height/2)
         self.range_weapon = 250
         self.w_weapon = 50
-        self.base_w_weapon = self.w_weapon
+        self.base_w_weapon = 200
         self.h_weapon = 20
 
         #Shield
@@ -45,6 +47,7 @@ class Boss:
         #Condition
         self.time_attack = 0
         self.time_walk = 0
+        self.provoc_status = False
         self.movement = True
         self.status_aoe = False
         self.status_attack = False
@@ -62,16 +65,23 @@ class Boss:
         self.attack_nb = 0
         self.parry_anim = ["Flo/AnimAthena/Anim Contre/Garde.png"]
         self.parry_nb = 0
-        self.aoe_anim = ["Flo/AnimAthena/Anim Onde/Début Lancé.png","Flo/AnimAthena/Anim Onde/Lancé 1 sur 2.png",
-                         "Flo/AnimAthena/Anim Onde/Lancé 2 sur 2.png","Flo/AnimAthena/Anim Onde/Onde 1 sur 5.png",
-                         "Flo/AnimAthena/Anim Onde/Onde 2 sur 5.png","Flo/AnimAthena/Anim Onde/Onde 3 sur 5.png",
-                         "Flo/AnimAthena/Anim Onde/Onde 4 sur 5.png",
-                         "Flo/AnimAthena/Anim Onde/Onde 5 sur 5.png","Flo/AnimAthena/Anim Onde/Recup 1 sur 5.png",
+        self.aoe_anim = ["Flo/AnimAthena/Anim Onde/Lancé 1 sur 3.png",
+                         "Flo/AnimAthena/Anim Onde/Lancé 2 sur 3.png","Flo/AnimAthena/Anim Onde/Lancé 3 sur 3.png",
+                         "Flo/AnimAthena/Anim Onde/Onde 1 sur 5.png","Flo/AnimAthena/Anim Onde/Onde 2 sur 5.png",
+                         "Flo/AnimAthena/Anim Onde/Onde 3 sur 5.png","Flo/AnimAthena/Anim Onde/Onde 4 sur 5.png",
+                         "Flo/AnimAthena/Anim Onde/Onde 5 sur 5.png","Flo/AnimAthena/Anim Onde/Récup 1 sur 5.png",
                          "Flo/AnimAthena/Anim Onde/Récup 2 sur 5.png","Flo/AnimAthena/Anim Onde/Récup 3 sur 5.png",
-                         "Flo/AnimAthena/Anim Onde/Recup 4 sur 5.png",
-                         "Flo/AnimAthena/Anim Onde/Recup 5 sur 5.png",]
+                         "Flo/AnimAthena/Anim Onde/Récup 4 sur 5.png","Flo/AnimAthena/Anim Onde/Récup 5 sur 5.png",]
         self.aoe_nb = 0
-        self.all_anim = [self.walk, self.attack_anim, self.parry_anim, self.aoe_anim]
+        self.idle_anim = ["Flo/AnimAthena/Anim Idle/Stand 1.png","Flo/AnimAthena/Anim Idle/Stand 2.png"]
+        self.idle_nb = 0
+        self.idle_time = 0
+        self.provoc_anim = ["Flo/AnimAthena/Anim Provoc/Provoc 1 sur 2.png","Flo/AnimAthena/Anim Provoc/Provoc 2 sur 2.png"]
+        self.provoc_nb = -1
+        self.provoc_time = 0
+        self.onde_anim = ["Flo/AnimAthena/Effet Onde/Effet 1 sur 2.png","Flo/AnimAthena/Effet Onde/Effet 2 sur 2.png"]
+        self.onde_nb = 0
+        self.all_anim = [self.walk, self.attack_anim, self.parry_anim, self.aoe_anim, self.idle_anim, self.provoc_anim, self.onde_anim]
         
     def choose_goal(self):
         if randint(1,2) == 1 :
@@ -90,6 +100,7 @@ class Boss:
         if self.isJumping :
             self.verticalVelocity += self.gravity
             self.y += self.verticalVelocity
+
         if (self.y <= self.maxPosY): 
             self.y = self.maxPosY
         
@@ -104,7 +115,7 @@ class Boss:
                 self.verticalVelocity = -self.jumpForce
 
     def collide_attack(self,object):
-        if (self.x_weapon+ self.w_weapon >= object.left and 
+        if (self.x_weapon+ self.base_w_weapon >= object.left and 
             self.x_weapon <= object.right and
             self.y_weapon <= object.bottom  and 
             self.y_weapon + self.h_weapon >= object.top):  
@@ -125,19 +136,20 @@ class Boss:
     def attack(self) :
         self.status_attack = True
         self.movement = False
+        
         r = (self.range_weapon-(self.w_weapon//2))+1
         if self.x > self.player.posX :
             if self.w_weapon < r :
-                self.w_weapon+=8
+                self.w_weapon+=24
             else :
                 self.w_weapon = self.base_w_weapon
                 self.movement = True
                 self.status_attack = False
         else :
             if self.w_weapon < r :
-                self.w_weapon+=8
+                self.w_weapon+=24
             else :
-                self.w_weapon = self.base_w_weapon
+                self.w_weapon = 50
                 self.movement = True
                 self.status_attack = False
         if self.attack_nb < len(self.attack_anim)-1 :
@@ -159,6 +171,10 @@ class Boss:
         if (self.shockwave_l_x >= min_x or self.shockwave_r_x <= max_x) and self.aoe_nb >= 3:
             self.shockwave_l_x -= self.w_shockwave
             self.shockwave_r_x += self.w_shockwave
+            if self.onde_nb == 0 :
+                self.onde_nb += 1
+            else :
+                self.onde_nb -=1
         elif (self.shockwave_l_x <= min_x or self.shockwave_r_x >= max_x):
             self.aoe_nb = 0
             self.status_aoe = False
@@ -178,6 +194,7 @@ class Boss:
             self.verticalVelocity = 0
             self.isJumping = False  
             self.onGround = True
+            
     
     def pattern_boss(self):
         if self.status_aoe == True :
@@ -193,13 +210,23 @@ class Boss:
         if self.parry_nb == 0:
             action = randint(1,8)
             self.status_damage = True
-            if action > 5 :
+            if action > 5 and self.isJumping == False:
                 self.parry()
                 self.movement = False
             else:
-                if randint(1,3) == 1:
+                if randint(1,3) == 1 and self.isJumping == False:
                     self.attack_aoe()
                 else : 
                     self.attack()
         else :
             self.parry()
+        
+    def active_provoc(self):
+        if self.provoc_nb < len(self.provoc_anim)-1:
+            self.provoc_nb += 1
+    
+    def active_idle(self):
+        if self.idle_nb == 0 :
+            self.idle_nb += 1
+        else :
+            self.idle_nb -= 1
