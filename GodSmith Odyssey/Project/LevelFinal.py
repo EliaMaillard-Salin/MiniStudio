@@ -107,6 +107,24 @@ backGround = pygame.image.load("GodSmith Odyssey/Project/Assets/PNG/BackGround.p
 # 13 = maison carre arriere plan, 14 = Pillier, 15 = Temple 
 
 
+sky_img = pygame.image.load('GodSmith Odyssey/Project/Assets/PNG/Backgrounds/0.png').convert_alpha() #sky
+house_img = pygame.image.load('GodSmith Odyssey/Project/Assets/PNG/Backgrounds/1.png').convert_alpha() #maison
+montaingn_img = pygame.image.load('GodSmith Odyssey/Project/Assets/PNG/Backgrounds/2.png').convert_alpha() #montagne
+void_img = pygame.image.load('GodSmith Odyssey/Project/Assets/PNG/Backgrounds/3.png').convert_alpha() #void
+
+def draw_bg(cam : Camera.Camera):
+    width = void_img.get_width()
+    screen.fill((177,234,255))
+    for x in range(4):
+        # void
+        screen.blit(void_img, ((x * width) - cam.pos_cam_x * 0.5, 0 - cam.pos_cam_x))
+        # montaign
+        screen.blit(montaingn_img, ((x * width) - cam.pos_cam_x * 0.6, SCREEN_HEIGHT - montaingn_img.get_height() - 20 - cam.pos_cam_y ))
+        # sky
+        screen.blit(sky_img, ((x * width) - cam.pos_cam_x * 0.7, SCREEN_HEIGHT - sky_img.get_height()-150- cam.pos_cam_y ))
+        # house
+        screen.blit(house_img, ((x * width) - cam.pos_cam_x * 0.8, SCREEN_HEIGHT - house_img.get_height()-15 - cam.pos_cam_y ))
+
 
 
 def ImportBuilding(): 
@@ -204,18 +222,17 @@ StartAthena = False
 
 
 
+menu = Menu.Menu(SCREEN_WIDTH,SCREEN_HEIGHT)
 
-running = True
-while running: 
-
- 
+while not menu.quit: 
 
 
     Pause = False
     dt = clock.tick(60)
     dt/=1000
-
-
+    if menu.status_pause :
+        screen.blit(backGround,(0,0))
+        menu.pause(SCREEN_WIDTH,SCREEN_HEIGHT,screen)
 
 
     if player.immortality == True and pygame.time.get_ticks() - player.startImmortality >= 1000: 
@@ -225,7 +242,9 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN :
-            if event.key == pygame.K_SPACE:
+            if event.key == pygame.K_p: 
+                menu.status_pause = True
+            elif event.key == pygame.K_SPACE:
                 player.playjump = True
                 # Autoriser le saut uniquement si le joueur n'est pas déjà en train de sauter
                 if not player.isJumping:
@@ -233,321 +252,322 @@ while running:
                     player.verticalVelocity = -player.jumpForce
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
             player.Attack() 
- 
-        if stop != 1:
-            for i in allMobs:
-                i.CollisionBot(player)
-            player.Movement(dt)
+    
+    if menu.status_pause == False:    
+            if stop != 1:
+                for i in allMobs:
+                    i.CollisionBot(player)
+                player.Movement(dt)
 
-        print(player.posX, player.posY)
+            print(player.posX, player.posY)
 
-        if player.posY >= SCREEN_HEIGHT + cam.limit_bottom :
-            player.posX = 50
-            player.posY = 250
-            cam.pos_cam_x = 0
-            cam.pos_cam_y = -30
+            if player.posY >= SCREEN_HEIGHT + cam.limit_bottom :
+                player.posX = 50
+                player.posY = 250
+                cam.pos_cam_x = 0
+                cam.pos_cam_y = -30
 
-        if player.posY + player.height <=cam.limit_top : 
-            player.posX = 50
-            player.posY = 250
-            cam.pos_cam_x = 0
-            cam.pos_cam_y = -30
-
-
-        for i in allMobs: 
-            i.MovementBot()
-            i.CheckCollision()
-        
-
-        cam.CamFollow(player, dt)
-
-        # left, right, top, bottom
-        sides = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+            if player.posY + player.height <=cam.limit_top : 
+                player.posX = 50
+                player.posY = 250
+                cam.pos_cam_x = 0
+                cam.pos_cam_y = -30
 
 
-        for i in platforms: 
+            for i in allMobs: 
+                i.MovementBot()
+                i.CheckCollision()
+            
 
-            side, distance = i.GetCollision(player.playerRect)
+            cam.CamFollow(player, dt)
 
-            if side == 0:
-                continue
+            # left, right, top, bottom
+            sides = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-            side -= 1
 
-            if side == 3 and i.solidity == False:
-                continue
-
-            direction = sides[side]
-            player.posX += direction[0] * distance
-            player.posY += direction[1] * distance
-
-            if side == 2:
-                player.PlayerOnGround(i.Rect.top)
-        
-        for j in allProps : 
-            if j.posY >= SCREEN_HEIGHT + cam.limit_bottom  or j.posY + j.height <= cam.limit_top: 
-                j.posY = j.spawnY ; j.posX = j.spawnX
-
-            j.onGround = False
             for i in platforms: 
-                if j.hasCollide == True: 
-                    side, distance = i.GetCollision(j.Rect)
 
-                    if side == 0:
-                        continue
+                side, distance = i.GetCollision(player.playerRect)
 
-                    side -= 1
+                if side == 0:
+                    continue
 
-                    if side == 3 and i.solidity == False:
-                        continue
+                side -= 1
 
-                    direction = sides[side]
-                    j.posX += direction[0] * distance
-                    j.posY += direction[1] * distance
+                if side == 3 and i.solidity == False:
+                    continue
 
-                    if side == 2:
-                        j.onGround = True
+                direction = sides[side]
+                player.posX += direction[0] * distance
+                player.posY += direction[1] * distance
 
-            j.Collider(player, dt)
-            j.CheckFalling(dt)
+                if side == 2:
+                    player.PlayerOnGround(i.Rect.top)
             
-        if TP.GetCollision(player.playerRect) != (0,0): 
-            StartAthena = True
-            running = False
+            for j in allProps : 
+                if j.posY >= SCREEN_HEIGHT + cam.limit_bottom  or j.posY + j.height <= cam.limit_top: 
+                    j.posY = j.spawnY ; j.posX = j.spawnX
 
+                j.onGround = False
+                for i in platforms: 
+                    if j.hasCollide == True: 
+                        side, distance = i.GetCollision(j.Rect)
 
-        # Affichage
+                        if side == 0:
+                            continue
 
-        screen.blit(backGround, (0,0))
+                        side -= 1
 
-        for i in allBuildings:
-            i.DrawBuilding(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
-        
-        for i in platforms:
-            i.Display(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
-            
-        for i in emptyTiles: 
-            i.Display(screen, [cam.pos_cam_x, cam.pos_cam_y])
+                        if side == 3 and i.solidity == False:
+                            continue
 
-        for j in allProps :
+                        direction = sides[side]
+                        j.posX += direction[0] * distance
+                        j.posY += direction[1] * distance
 
-            if j.coinReveal == True : 
-                Pause = True
-                player.onPause = True
-                cam.onPause = True
-                player.verticalVelocity = 0
-                player.playerVelocity = 0
-                coin = coinsManager.coins(j.index-3)
-                player.isDashing = False
-                coin.show(screen)
-                for eventMenu in pygame.event.get():
-                    if eventMenu.type == pygame.KEYDOWN:
-                        if eventMenu.key == pygame.K_ESCAPE and coin.coin != 0:
-                            displayImage = False
-                            player.onPause = False
-                            cam.onPause = False
-                            player.saveY = 0
-                            j.coinReveal = False
-                            player.posY = j.posY
-                            allProps.remove(j)
-                            coin.coin = 0
-                            player.playerVelocity = 300
-                                    
-            elif Pause == False:   
-                j.DisplayProp(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        if side == 2:
+                            j.onGround = True
 
-
-        if Pause == False : 
-   
-            if player.isDead == True and stop != 1:
-                player.PlayerDeath(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                player.death += 1
-                if player.death == 2 :
-                    player.playerdeath_nb += 1
-                    player.death = 0
-                if player.playerdeath_nb == 19 : 
-                    player.playerdeath_nb = 0
-                    player.isDead == False
-                    stop = 1
-            
-            if player.getHit == True and player.isDead == False and stop != 1:
-                player.PlayerHurt(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                player.hurt += 1
-                if player.hurt == 3 :
-                    player.playerhurt_nb += 1
-                    player.hurt = 0
-                if player.playerhurt_nb == 12 :
-                    player.playerhurt_nb = 0
-                    player.getHit = False
-            
-            if player.playattack == True and player.getHit == False and player.isDead == False and stop != 1:
-                if player.playdash == False : 
-                    player.PlayerAttack(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    player.attack_time += 1
-                    if player.attack_time == 2 :
-                        player.playerattack_nb += 1
-                        player.attack_time = 0        
-                    if player.playerattack_nb == 15:
-                        player.playerattack_nb = 0
-                        player.playattack = False
+                j.Collider(player, dt)
+                j.CheckFalling(dt)
                 
+            if TP.GetCollision(player.playerRect) != (0,0): 
+                StartAthena = True
+                running = False
 
-            if player.playjump == True  and player.playattack == False and player.isDead == False and stop != 1:
-                if player.playdash == False :  
-                    player.PlayerJump(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    player.jump_time += 1     
-                    if player.jump_time == 2 :
-                        player.playerjump_nb += 1
-                        player.jump_time = 0        
-                    if player.playerjump_nb == 22:
-                        player.playerjump_nb = 0
-                        player.playjump = False
-                        player.PauseIdle == 0
-                        player.PauseMove == 0
+
+            # Affichage
+
+            draw_bg(cam)
+
+            for i in allBuildings:
+                i.DrawBuilding(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
             
-            if player.playdash == True and player.getHit == False and player.isDead == False and stop != 1:
-                player.Dash(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                player.dash_time += 1     
-                if player.dash_time == 2 :
-                    player.playerdash_nb += 1
-                    player.dash_time = 0        
-                if player.playerdash_nb == 28:
-                    player.playerdash_nb = 0
-                    player.playdash = False
+            for i in platforms:
+                i.Display(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
+                
+            for i in emptyTiles: 
+                i.Display(screen, [cam.pos_cam_x, cam.pos_cam_y])
 
-            #Animation idle player
-            ##########################################
-            if player.PauseIdle == 0 and player.playdash == False and player.playjump == False and player.playattack == False and player.getHit == False and player.isDead == False and stop != 1:
-                player.Idle(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                idle += 1
-                if idle == 4 :
-                    player.playeridle_nb += 1
-                    idle = 0
-                if player.playeridle_nb == 20 :
-                    player.playeridle_nb = 0
-            ##########################################
-        
-            if player.playwalk == True and player.playdash == False and player.PauseMove == 0 and player.playjump == False and player.playattack == False and player.getHit == False and player.isDead == False and stop != 1:
-                player.PauseIdle = 1
-                player.PlayerWalk(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                player.timeWalk += 1
-                if player.timeWalk == 4 :
-                    player.playerwalk_nb += 1
-                    player.timeWalk = 0
-                    player.playerwalk_nb_save = player.playerwalk_nb
-                if player.playerwalk_nb == len(player.imganim[2]) :
-                    player.playerwalk_nb = 0
-                    if keys[pygame.K_d] or keys[pygame.K_q]:
-                        player.playwalk = True
-                    else :
-                        player.playwalk = False
-                        player.PauseIdle = 0
+            for j in allProps :
 
+                if j.coinReveal == True : 
+                    Pause = True
+                    player.onPause = True
+                    cam.onPause = True
+                    player.verticalVelocity = 0
+                    player.playerVelocity = 0
+                    coin = coinsManager.coins(j.index-3)
+                    player.isDashing = False
+                    coin.show(screen)
+                    for eventMenu in pygame.event.get():
+                        if eventMenu.type == pygame.KEYDOWN:
+                            if eventMenu.key == pygame.K_ESCAPE and coin.coin != 0:
+                                displayImage = False
+                                player.onPause = False
+                                cam.onPause = False
+                                player.saveY = 0
+                                j.coinReveal = False
+                                player.posY = j.posY
+                                allProps.remove(j)
+                                coin.coin = 0
+                                player.playerVelocity = 300
+                                        
+                elif Pause == False:   
+                    j.DisplayProp(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+
+
+            if Pause == False : 
+    
+                if player.isDead == True and stop != 1:
+                    player.PlayerDeath(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                    player.death += 1
+                    if player.death == 2 :
+                        player.playerdeath_nb += 1
+                        player.death = 0
+                    if player.playerdeath_nb == 19 : 
+                        player.playerdeath_nb = 0
+                        player.isDead == False
+                        stop = 1
+                
+                if player.getHit == True and player.isDead == False and stop != 1:
+                    player.PlayerHurt(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                    player.hurt += 1
+                    if player.hurt == 3 :
+                        player.playerhurt_nb += 1
+                        player.hurt = 0
+                    if player.playerhurt_nb == 12 :
+                        player.playerhurt_nb = 0
+                        player.getHit = False
+                
+                if player.playattack == True and player.getHit == False and player.isDead == False and stop != 1:
+                    if player.playdash == False : 
+                        player.PlayerAttack(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        player.attack_time += 1
+                        if player.attack_time == 2 :
+                            player.playerattack_nb += 1
+                            player.attack_time = 0        
+                        if player.playerattack_nb == 15:
+                            player.playerattack_nb = 0
+                            player.playattack = False
+                    
+
+                if player.playjump == True  and player.playattack == False and player.isDead == False and stop != 1:
+                    if player.playdash == False :  
+                        player.PlayerJump(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        player.jump_time += 1     
+                        if player.jump_time == 2 :
+                            player.playerjump_nb += 1
+                            player.jump_time = 0        
+                        if player.playerjump_nb == 22:
+                            player.playerjump_nb = 0
+                            player.playjump = False
+                            player.PauseIdle == 0
+                            player.PauseMove == 0
+                
+                if player.playdash == True and player.getHit == False and player.isDead == False and stop != 1:
+                    player.Dash(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                    player.dash_time += 1     
+                    if player.dash_time == 2 :
+                        player.playerdash_nb += 1
+                        player.dash_time = 0        
+                    if player.playerdash_nb == 28:
+                        player.playerdash_nb = 0
+                        player.playdash = False
+
+                #Animation idle player
+                ##########################################
+                if player.PauseIdle == 0 and player.playdash == False and player.playjump == False and player.playattack == False and player.getHit == False and player.isDead == False and stop != 1:
+                    player.Idle(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                    idle += 1
+                    if idle == 4 :
+                        player.playeridle_nb += 1
+                        idle = 0
+                    if player.playeridle_nb == 20 :
+                        player.playeridle_nb = 0
+                ##########################################
             
-            walktime += 1  
-            for i in allMobs :
+                if player.playwalk == True and player.playdash == False and player.PauseMove == 0 and player.playjump == False and player.playattack == False and player.getHit == False and player.isDead == False and stop != 1:
+                    player.PauseIdle = 1
+                    player.PlayerWalk(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                    player.timeWalk += 1
+                    if player.timeWalk == 4 :
+                        player.playerwalk_nb += 1
+                        player.timeWalk = 0
+                        player.playerwalk_nb_save = player.playerwalk_nb
+                    if player.playerwalk_nb == len(player.imganim[2]) :
+                        player.playerwalk_nb = 0
+                        if keys[pygame.K_d] or keys[pygame.K_q]:
+                            player.playwalk = True
+                        else :
+                            player.playwalk = False
+                            player.PauseIdle = 0
 
-                if i.hp != 0:
-                    i.walking(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    
-                # Attack
-                if i.attack == True and stop != 1:
-                    pause = True
-                    attack += 1
-                    i.walk = False
-                    i.Checkpoint1 = False
-                    i.Checkpoint2 = False
-                    i.BotAttack(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    if attack == 2 :
-                        i.botAttack_nb += 1
-                        attack = 0
-                    
-                if i.botAttack_nb == 23:
-                    i.botAttack_nb = 0
-                    i.attack = False
-                    i.walk = True
-                    if i.BotDirection == -1 :
-                        i.Checkpoint1 = True
-                    elif i.BotDirection == 1:
-                        i.Checkpoint2 = True
-                    
-                # Death 
-                if i.death == True and stop != 1:
-                    pause = True
-                    death += 1
-                    i.walk = False
-                    i.Checkpoint1 = False
-                    i.Checkpoint2 = False
-                    i.BotDeath(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    if death == 2 :
-                        i.botdeath_nb += 1
-                        death = 0
+                
+                walktime += 1  
+                for i in allMobs :
+
+                    if i.hp != 0:
+                        i.walking(screen, [cam.pos_cam_x, cam.pos_cam_y ])
                         
-                if i.botdeath_nb == 30:
-                    i.botdeath_nb = 0
-                    i.Death(allMobs)
-                    i.death = False
-                    i.walk = True
-                    if i.BotDirection == -1 :
-                        i.Checkpoint1 = True
-                    elif i.BotDirection == 1:
-                        i.Checkpoint2 = True
-                    
-                    
-                # Hurt
-                if i.hurt == True and stop != 1:
-                    pause = True
-                    hurt += 1
-                    i.walk = False
-                    i.Checkpoint1 = False
-                    i.Checkpoint2 = False
-                    i.BotHurt(screen, [cam.pos_cam_x, cam.pos_cam_y ])
-                    if hurt == 4:
-                        i.bothurt_nb += 1
-                        hurt = 0
-                
-                if i.bothurt_nb == 19:
-                    i.bothurt_nb = 0
-                    i.hurt = False
-                    i.walk = True
-                    if i.BotDirection == -1 :
-                        i.Checkpoint1 = True
-                    elif i.BotDirection == 1:
-                        i.Checkpoint2 = True
+                    # Attack
+                    if i.attack == True and stop != 1:
+                        pause = True
+                        attack += 1
+                        i.walk = False
+                        i.Checkpoint1 = False
+                        i.Checkpoint2 = False
+                        i.BotAttack(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        if attack == 2 :
+                            i.botAttack_nb += 1
+                            attack = 0
                         
-                    # Walk
-                if stop != 1 :
-                    walktime += 1  
-                    if walktime == 10:
-                        i.botdesign_nb += 1
-                        walktime = 0
-                
-                    if i.botdesign_nb == 5 :
-                        i.botdesign_nb = 0
-
-                i.DisplayCheckBot(screen)
-
-            screen.blit(EndLevel, (7800 -cam.pos_cam_x, -465 - cam.pos_cam_y))
-
-            for i in allFrontBuildings:
-                i.DrawBarrer(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
-
-
-            # UI
+                    if i.botAttack_nb == 23:
+                        i.botAttack_nb = 0
+                        i.attack = False
+                        i.walk = True
+                        if i.BotDirection == -1 :
+                            i.Checkpoint1 = True
+                        elif i.BotDirection == 1:
+                            i.Checkpoint2 = True
+                        
+                    # Death 
+                    if i.death == True and stop != 1:
+                        pause = True
+                        death += 1
+                        i.walk = False
+                        i.Checkpoint1 = False
+                        i.Checkpoint2 = False
+                        i.BotDeath(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        if death == 2 :
+                            i.botdeath_nb += 1
+                            death = 0
+                            
+                    if i.botdeath_nb == 30:
+                        i.botdeath_nb = 0
+                        i.Death(allMobs)
+                        i.death = False
+                        i.walk = True
+                        if i.BotDirection == -1 :
+                            i.Checkpoint1 = True
+                        elif i.BotDirection == 1:
+                            i.Checkpoint2 = True
+                        
+                        
+                    # Hurt
+                    if i.hurt == True and stop != 1:
+                        pause = True
+                        hurt += 1
+                        i.walk = False
+                        i.Checkpoint1 = False
+                        i.Checkpoint2 = False
+                        i.BotHurt(screen, [cam.pos_cam_x, cam.pos_cam_y ])
+                        if hurt == 4:
+                            i.bothurt_nb += 1
+                            hurt = 0
                     
-            screen.blit(player.playerIcon, (15,35))
+                    if i.bothurt_nb == 19:
+                        i.bothurt_nb = 0
+                        i.hurt = False
+                        i.walk = True
+                        if i.BotDirection == -1 :
+                            i.Checkpoint1 = True
+                        elif i.BotDirection == 1:
+                            i.Checkpoint2 = True
+                            
+                        # Walk
+                    if stop != 1 :
+                        walktime += 1  
+                        if walktime == 10:
+                            i.botdesign_nb += 1
+                            walktime = 0
+                    
+                        if i.botdesign_nb == 5 :
+                            i.botdesign_nb = 0
 
-            count = 0
-            for i in player.listHP: 
-                screen.blit(i, ( 305  + (count*60), 70))
-                count +=1
-            screen.blit(player.dashImages[player.dashState], ( 150,50 ))
-            currentFPS = int(1000/(dt*1000))
-            displayFPS : pygame.Surface = pygame.transform.scale(font.render(str(currentFPS), True, (0,0,0)), (35,30) )
-            screen.blit(displayFPS, (25,150))
-        
-        if player.isDead == True : 
-            player.HUDdeath(screen)
+                    i.DisplayCheckBot(screen)
+
+                screen.blit(EndLevel, (7800 -cam.pos_cam_x, -465 - cam.pos_cam_y))
+
+                for i in allFrontBuildings:
+                    i.DrawBarrer(screen, [cam.pos_cam_x, cam.pos_cam_y ] )
+
+
+                # UI
+                        
+                screen.blit(player.playerIcon, (15,35))
+
+                count = 0
+                for i in player.listHP: 
+                    screen.blit(i, ( 305  + (count*60), 70))
+                    count +=1
+                screen.blit(player.dashImages[player.dashState], ( 150,50 ))
+                currentFPS = int(1000/(dt*1000))
+                displayFPS : pygame.Surface = pygame.transform.scale(font.render(str(currentFPS), True, (0,0,0)), (35,30) )
+                screen.blit(displayFPS, (25,150))
+            
+            if player.isDead == True : 
+                player.HUDdeath(screen)
 
        
     pygame.display.update()
