@@ -262,7 +262,7 @@ class Player:
 
 
 
-    def Movement(self, dt : int) -> None: 
+    def Movement(self) -> None: 
         if self.onPause == True : 
             return
 
@@ -287,7 +287,7 @@ class Player:
 
         if self.isDashing:
             self.immortality = True
-            self.posX += self.dashDirection * self.dashVelocity * dt
+            self.posX += self.dashDirection * self.dashVelocity 
             self.dashCoolDown -= 1
             if self.dashCoolDown <= 50:
                 self.isDashing = False
@@ -297,20 +297,20 @@ class Player:
             # Déplacement horizontal
             if keys[pygame.K_q]:
                 self.playwalk = True      
-                self.posX -= self.playerVelocity  * dt
+                self.posX -= self.playerVelocity  
                 self.playerDirection = 1
                 self.PauseIdle = 1
             if keys[pygame.K_d]:
                 self.playwalk = True      
                 self.playerDirection = 0
-                self.posX += self.playerVelocity * dt
+                self.posX += self.playerVelocity 
                 self.PauseIdle = 1
 
         # Appliquer la gravité
         
 
         self.verticalVelocity += self.gravity 
-        self.posY += self.verticalVelocity * dt
+        self.posY += self.verticalVelocity 
         
         if not self.isDashing:
             self.immortality =False

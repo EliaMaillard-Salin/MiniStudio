@@ -26,7 +26,7 @@ pygame.init()
 keys = pygame.key.get_pressed()
 
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.FULLSCREEN)
 pygame.display.set_caption("GodSmith Odyssey")
 
 
@@ -237,7 +237,7 @@ while running:
         if stop != 1:
             for i in allMobs:
                 i.CollisionBot(player)
-            player.Movement(dt)
+            player.Movement()
 
         print(player.posX, player.posY)
 
